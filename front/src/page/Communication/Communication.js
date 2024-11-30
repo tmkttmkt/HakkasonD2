@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import MainContainer from '../../component/Main_container/Main_container'; // MainContainerをインポート
 import IMAGE1 from './images/仮画像1.png'// 画像のパス
-const Communication = () => 
+const Communication = ({setCurrentPage}) => 
 {
   const page_A = () => 
   {
-    console.log('ページAがクリックされました');
+    setCurrentPage("chat");
   };
 
   const page_B = () => 

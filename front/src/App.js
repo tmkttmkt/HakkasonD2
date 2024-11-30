@@ -9,6 +9,7 @@ import SUIHANN from './page/SUIHANN/SUIHANN';
 import Ranking from './page/Ranking/Ranking';
 import Recruitment from './page/Recruitment/Recruitment';
 import Billing from './page/Billing/Billing';
+import Chat from './page/Chat/Chat';
 import Header from './component/Head/Header';
 
 function App() {
@@ -23,11 +24,12 @@ function App() {
       case "profile": return <Profile />;
       case "account": return <Account setCurrentPage={setCurrentPage}/>;
       case "production": return <Production />;
-      case "communication": return <Communication />;
+      case "communication": return <Communication  setCurrentPage={setCurrentPage}/>;
       case "SUIHANN": return <SUIHANN />;
       case "ranking": return <Ranking />;
       case "recruitment": return <Recruitment />;
       case "billing": return <Billing />;
+      case "chat": return <Chat setCurrentPage={setCurrentPage} />;
       default: return <Login setCurrentPage={setCurrentPage} />; // デフォルトはログイン画面
     }
   };
@@ -41,7 +43,7 @@ function App() {
   return (
     <div className="App">
       {/* Headerを表示 */}
-      {currentPage !== "login" && currentPage !== "account" && (
+      {currentPage !== "login" && currentPage !== "account" && currentPage!=="chat" && (
         <Header
           select_1="プロフィール画面へ" onClick1={() => setCurrentPage("profile")}
           select_2="制作物画面へ" onClick2={() => setCurrentPage("production")}
