@@ -12,6 +12,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.45.3",
     "@vercel/node": "^3.2.27",
+    "aws-sdk": "^2.1692.0",
     "cloudinary": "^1.21.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
