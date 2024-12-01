@@ -1,11 +1,17 @@
 # lgion
 /login
 ##
+- method:POST
 - pass:/
 - body={id:str,pass:str}
 - res={success:bool}
 ##
+- method:POST
 - pass:/signup
 - body={id:str,pass:str,name:str}
-- res={- pass:/success
-:bool}
+- res={success:bool}
+##
+- method:GET
+- pass:/
+- body={}
+- res={success:bool}
