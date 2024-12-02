@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Side_button from '../../component/Main_container/Side_button/Side_button';
 import './Login.css';
+require('dotenv').config(); 
 
 function Login({ setCurrentPage }) 
 {
