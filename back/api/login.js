@@ -10,19 +10,25 @@ const table="login"
 async function postlogin(req, res){
     const { id, pass } = req.body;
     
-    const {data,error} = await supabase.from(table).select("*").eq("uesr_id",id);
+    const {data,error} = await supabase.from(table).select("*").eq("user_id",id);
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
     }
     else{
-        res.json({ success: data.password==pass });
+      console.log(data.length>0)
+      if(data.length>0){
+        res.json({ success: data[0].password==pass });
+      }
+      else{
+        res.json({ success: false });
+      }
     }
            
 }
 router.post('/',postlogin);
 
-async function postlogin(req, res){
+async function getlogin(req, res){
     const {data,error} = await supabase.from(table).select("*");
     if (error) {
       console.error('Error inserting data:', error);
@@ -33,7 +39,7 @@ async function postlogin(req, res){
     }
            
 }
-router.get('/',postlogin);
+router.get('/',getlogin);
 
 async function postsignup(req, res){
     const { id, pass,name } = req.body; 

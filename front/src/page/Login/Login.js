@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
 import Side_button from '../../component/Main_container/Side_button/Side_button';
 import './Login.css';
-require('dotenv').config(); 
-
+function func(){
+  let url=process.env.REACT_APP_BACKEND_URL+"/login";
+  console.log(url);
+  fetch(url)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("データ取得に失敗しました");
+    }
+    return response;  // ここで Promise を返す
+  })
+  .then((data) => {
+    console.log(data.json());  // JSONデータがここに来る
+  })
+  .catch((error) => {
+    console.error("エラー:", error);
+  });
+}
 function Login({ setCurrentPage }) 
 {
   const [inputText, setInputText] = useState({ password: "", mail_address: "" });
   const [OK_or_NO_text, OK_or_NO_draw] = useState("");
   const Login_email = "", Login_password = ""; // ログインする際のアドレスとパスワード
-
-  // 入力変更ハンドラー
+    // 入力変更ハンドラー
   const handleInputChange = (event) => {
     const { name, value } = event.target; // 入力要素の name と value を取得
     setInputText((prevState) => ({
@@ -17,10 +31,36 @@ function Login({ setCurrentPage })
       [name]: value // 対応するプロパティを更新
     }));
   };
-
+  async function getpass(mail, password){
+    let ret=false;
+    let postdata={
+      method: 'POST', // リクエストの種類を指定
+      headers: {
+        'Content-Type': 'application/json' // データ形式を指定
+      },
+      body: JSON.stringify({id:mail,pass:password}) // 送信するデータをJSON文字列に変換
+    }
+    let url=process.env.REACT_APP_BACKEND_URL+"/login";
+    console.log(url,postdata);
+    await fetch(url,postdata)
+    .then((response) => 
+    {
+      if (!response.ok) {throw new Error("データ取得に失敗しました");}
+      return response.json();
+    })
+    .then((data) => 
+    {
+      console.log(data)
+      ret=data.success
+    })
+    .catch((error) => {console.error("エラー:", error);})
+    return ret
+  }
   // ログイン認証処理
-  const access = (email, password) => {
-    if (Login_email === email && Login_password === password) {
+  const access = async(email, password) => {
+    let flg=await getpass(email, password);
+    console.log(flg)
+    if (flg) {
       OK_or_NO_draw("");
       setCurrentPage("profile"); // ログイン成功後、profileページに遷移
     } else {
