@@ -16,7 +16,6 @@ async function postlogin(req, res){
       res.status(500).send();
     }
     else{
-      console.log(data.length>0)
       if(data.length>0){
         res.json({ success: data[0].password==pass });
       }
