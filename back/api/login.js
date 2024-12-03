@@ -1,3 +1,4 @@
+process.noDeprecation = true;
 const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const router = express.Router();
