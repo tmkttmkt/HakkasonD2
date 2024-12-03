@@ -1,0 +1,6 @@
+user_id:text okome:int8 role:text exposition:text billin:int8
+のテストデータをcvsとして作って
+billinは0で
+okomeは0以上
+roleはProgrammer, writer, composer, artistのみ
+expositionは自己紹介
