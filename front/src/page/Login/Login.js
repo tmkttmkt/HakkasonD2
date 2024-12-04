@@ -4,7 +4,8 @@ import Login_data from '../../component/Data/Login_data'; // Address_Data コン
 import Data_login from './Data_login'; // Data_login コンポーネントをインポート
 import './Login.css';
 
-function Login({ setCurrentPage, set_login_address }) {
+function Login({ setCurrentPage, set_login_address }) 
+{
     const [inputText, setInputText] = useState({ password: "", mail_address: "" });
     const [OK_or_NO_text, OK_or_NO_draw] = useState("");
     const dataLoginRef = useRef(); // Data_login コンポーネントの ref
