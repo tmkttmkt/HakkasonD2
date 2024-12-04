@@ -7,7 +7,8 @@ export const fetchRecruitmentData = async () => //募集状況を管理するデ
       { username: "○○", text: "こんにちは！あたしのサイト作ってよ！ばか！", person_looking_for: "受託者", mail_address: "aaaaa" },
       { username: "××", text: "こんばんは！サイト作ればか！", person_looking_for: "開発者", mail_address: "ddddd" },
       { username: "△△", text: "おはようございます！誰か私にオリジナルサイトを作ってくれないでしょうか？", person_looking_for: "受託者", mail_address: "bbbb" },
-      { username: "□□", text: "昼過ぎに連絡します！貴方がほしいアプリを完璧に作って見せます", person_looking_for: "開発者", mail_address: "cccc" }
+      { username: "□□", text: "昼過ぎに連絡します！貴方がほしいアプリを完璧に作って見せます", person_looking_for: "開発者", mail_address: "cccc" },
+      { username: "XとY", text: "数学サイト作ります！、ちなみに俺と意見が会はないなら即クレームします覚悟しておいてください", person_looking_for: "開発者", mail_address: "dddd" }
     ];
 };
   

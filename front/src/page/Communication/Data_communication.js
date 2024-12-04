@@ -3,9 +3,9 @@ const Data_communication = async () =>
 {
     // 仮データ（APIから取得する場合はfetchを利用）
     return [
-      { username: 'communicationボタン1', text: 'こんにちは！' },
-      { username: 'Bob', text: 'こんばんは！' },
-      { username: 'Charlie', text: 'おはようございます！' }
+      { username: 'communicationボタン1' },
+      { username: 'Bob' },
+      { username: 'Charlie'}
     ];//このreturnで返しているリスト内に応募した人のユーザーネームと、その人が書いたメッセージデータが来ればOK
 };  
 export default Data_communication;

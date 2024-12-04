@@ -25,7 +25,7 @@ const Communication = ({ setCurrentPage }) =>
     sideButtonPosition: 'left',
     buttonText: `${message.username}さんとチャットをつなぐ`,
     onClick: () => setCurrentPage('chat'), // ページAへの遷移
-    text: `反応した人の書き込みしたテキスト:\n${message.text}`,
+    text: '貴方の募集に反応した人がいます！',
     textSize: 20,
     imageSrc: IMAGE1
   }));
