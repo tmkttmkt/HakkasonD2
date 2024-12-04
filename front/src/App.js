@@ -12,7 +12,8 @@ import Billing from './page/Billing/Billing';
 import Chat from './page/Chat/Chat';
 import Header from './component/Head/Header';
 
-function App() {
+function App() 
+{
   // 現在のページを管理する状態変数
   const [currentPage, setCurrentPage] = useState("login");
   const [loginAddress, setLoginAddress] = useState("");  // メールアドレスを保持

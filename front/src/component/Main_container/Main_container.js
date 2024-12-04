@@ -5,7 +5,6 @@ import Text_box from './Text_box/Text_box';
 import Text_input from './Text_input/Text_input';
 import Select_input from './Select_input/Select_input';  // SelectInput をインポート
 import Line from './Line/Line'; // Lineコンポーネントをインポート
-
 const MainContainer = ({ layoutData }) => {
   return (
     <div className="main-container">
@@ -27,6 +26,11 @@ const MainContainer = ({ layoutData }) => {
             {/* 画像表示 */}
             {item.imageSrc && (
               <img src={item.imageSrc} alt="コンテンツ画像" className="content-image" />
+            )}
+
+            {/* 画像表示（新しいimage） */}
+            {item.image && (
+              <img src={item.image} alt="表示する画像" className="content-image" />
             )}
 
             {/* テキスト表示 */}
@@ -70,6 +74,10 @@ const MainContainer = ({ layoutData }) => {
           </div>
         </div>
       ))}
+
+    <h1>　　　　　　　　</h1>
+    <h1>　　　　　　　　</h1>
+
     </div>
   );
 };

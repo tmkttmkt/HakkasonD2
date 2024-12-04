@@ -1,7 +1,8 @@
 // Text_box.js
 import React from 'react';
 
-const Text_box = ({ textList }) => {
+const Text_box = ({ textList }) => 
+{
   return (
     <div className="text-box">
       {textList.map((text, index) => (

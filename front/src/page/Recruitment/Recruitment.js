@@ -77,7 +77,6 @@ const Recruitment = () =>
       imageSrc: IMAGE1,
     })),
   ];
-
   return (
     <div>
       <h1>募集画面</h1>
@@ -87,5 +86,4 @@ const Recruitment = () =>
     </div>
   );
 };
-
 export default Recruitment;

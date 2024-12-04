@@ -31,6 +31,10 @@ function Header({
     }
   };
 
+  // nameが長すぎる場合に「...」を表示するロジック
+  const maxLength = 30;  // 最大文字数を設定
+  const displayedName = name.length > maxLength ? name.slice(0, maxLength) + "..." : name;
+
   return (
     <div className="header">
       {/* 現在のページを表示する背景 */}
@@ -43,8 +47,7 @@ function Header({
       
       {/* ログインアドレスを表示 */}
       <h1 className="message_to_you">
-       
-       {"「"}{name}{"」"}{'さん、こんにちは！'}
+        {"現在メールアドレス「"}{displayedName}{"」でログイン中です！"}
       </h1>
       
       {/* ログアウトボタン */}
