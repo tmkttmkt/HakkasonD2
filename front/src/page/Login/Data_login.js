@@ -1,4 +1,5 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from "react";
+
 //「ref」で親コンポーネントから活用可能な関数コンポーネントの作成
 const Data_login = forwardRef(({ fetchUrl }, ref) => 
 {

@@ -1,69 +1,89 @@
-import React, { useState } from 'react';
-import MainContainer from '../../component/Main_container/Main_container'; // MainContainerをインポート
-import IMAGE1 from './images/仮画像1.png'// 画像のパス
+import React, { useState, useEffect } from 'react';
+import MainContainer from '../../component/Main_container/Main_container';
+import IMAGE1 from './images/Shuzo_Matsuoka.jpg';
+import {my_Application,my_Recruitment} from './Data_Recruitment';//募集処理関数と応募処理関数import
+import { fetchRecruitmentData, Registration_Data } from '../../component/Data/Data';//登録データと募集状況データ取得関数
+
 const Recruitment = () => 
 {
-  const page_A = () => 
+  const [recruitmentInput, setRecruitmentInput] = useState({
+    recruitment_message: '',
+    Developer_or_trustee: '開発者探す',
+  });
+
+  const [recruitmentData, setRecruitmentData] = useState([]);
+  const [myRecruitmentData, setMyRecruitmentData] = useState([]); // 修正: My_recruitmentData -> myRecruitmentData
+
+  // 初期データの取得
+  useEffect(() => {
+    const loadData = async () => 
+    {
+      const data = await fetchRecruitmentData(); // 募集状況データの読み込み
+      setRecruitmentData(data); // 全体の募集状況データを読み込み
+      const data2 = await Registration_Data(); // 自分の登録データの読み込み
+      setMyRecruitmentData(data2); // 自分の登録データを設定
+    };
+    loadData();
+  }, []);
+
+  // 入力内容の変更
+  const handleTextChange = (newValue) => 
   {
-    console.log('ページAがクリックされました');
+    setRecruitmentInput((prev) => ({ ...prev, recruitment_message: newValue }));
   };
 
-  const page_B = () => 
+  const handleDeveloperOrTrusteeChange = (newValue) => 
   {
-    console.log('ページBがクリックされました');
+    setRecruitmentInput((prev) => ({ ...prev, Developer_or_trustee: newValue }));
   };
 
-  const page_C = () => 
-  {
-    console.log('ページCがクリックされました');
-  };
-
-  const page_D = () => 
-  {
-
-  };
-
-  // メインコンテナに渡すデータを定義
-  const layoutData = [
-    {
-      sideButtonPosition: 'left',
-      buttonText: '募集画面ボタン1',
-      onClick: page_A,
-      text: '募集画面に表示させたい文1',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'left',
-      buttonText: '募集画面ボタン2',
-      onClick: page_B,
-      text: '募集画面に表示させたい文2',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'right',
-      buttonText: '募集画面ボタン3',
-      onClick: page_C,
-      text: '募集画面に表示させたい文3',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'center',
-      buttonText: '募集画面ボタン4',
-      onClick: page_D,
-      text: '募集画面に表示させたい文4',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
+  const selectOptions = [
+    { text: '開発者を探しています!', onSelect: () => handleDeveloperOrTrusteeChange('開発者探す') },
+    { text: '受託者を探しています!', onSelect: () => handleDeveloperOrTrusteeChange('受託者探す') },
   ];
+
+  const developerData = recruitmentData.filter((recruit) => recruit.person_looking_for === '開発者');
+  const trusteeData = recruitmentData.filter((recruit) => recruit.person_looking_for === '受託者');
+
+  // メインコンテナ内の設計の設定
+  const layoutData = [
+    { text: '募集メッセージ入力欄', textSize: 8 },
+    { line_color: 'gray', line_thickness: '3px', line_width: '100%' },
+    { selectOptions, select_input_text: '応募の種類を選択してください→' },
+    { onTextChange: handleTextChange },
+    {
+      sideButtonPosition: 'left',
+      buttonText: '上記の内容で募集を投稿する！',
+      onClick: () => {
+        my_Recruitment(recruitmentInput); // 募集の投稿処理
+      },
+    },
+    { line_color: 'gray', line_thickness: '3px', line_width: '100%' },
+    { text: '受託者募集一覧', textSize: 8 },
+    ...developerData.map((recruit, index) => ({
+      sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
+      buttonText: `この人の募集に応募する！`,
+      onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
+      text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
+      imageSrc: IMAGE1,
+    })),
+    { line_color: 'gray', line_thickness: '3px', line_width: '100%' },
+    { text: '開発者募集一覧', textSize: 8 },
+    ...trusteeData.map((recruit, index) => ({
+      sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
+      buttonText: `この人の募集に応募する！`,
+      onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
+      text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
+      imageSrc: IMAGE1,
+    })),
+  ];
+
   return (
     <div>
-      <h1>募集画面です(仮配置)</h1>
-      
-      {/* MainContainerコンポーネントを使って、layoutDataを渡す */}
-      <MainContainer layoutData={layoutData} />
+      <h1>募集画面</h1>
+      <MainContainer layoutData={layoutData} recruitmentMessage={recruitmentInput.recruitment_message} handleTextChange={handleTextChange} />
+      <div style={{ marginTop: '20px' }}>
+      </div>
     </div>
   );
 };

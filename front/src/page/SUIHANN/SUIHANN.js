@@ -5,7 +5,7 @@ const SUIHANN = () =>
 {
   const page_A = () => 
   {
-    console.log('ページAがクリックされました');
+    
   };
 
   const page_B = () => 
@@ -24,7 +24,8 @@ const SUIHANN = () =>
   };
 
   // メインコンテナに渡すデータを定義
-  const layoutData = [
+  const layoutData = 
+  [
     {
       sideButtonPosition: 'left',
       buttonText: 'すいはん画面ボタン1',
