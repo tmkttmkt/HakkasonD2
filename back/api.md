@@ -15,3 +15,6 @@
 - pass:/
 - body={}
 - res={success:bool}
+
+APIを３つ
+いしゅーのやつ書く
