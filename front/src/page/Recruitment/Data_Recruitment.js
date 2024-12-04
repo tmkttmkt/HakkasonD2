@@ -11,7 +11,7 @@ export const my_Recruitment = async () =>
     text: "こんにちは！あたしのサイト作ってよ！ばか！",
     person_looking_for: "受託者",
     mail_address: "aaaaa"
-  };
+  };//今自分が入力した情報(仮)
 
   // 新しいデータを募集状況データベースに追加
   console.log(`新しい募集データを追加: ${JSON.stringify(newRecruitment)}`);
