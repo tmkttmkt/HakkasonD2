@@ -58,24 +58,39 @@ const Recruitment = () =>
         my_Recruitment(recruitmentInput); // 募集の投稿処理
       },
     },
-    { line_color: 'gray', line_thickness: '3px', line_width: '100%' },
+    { line_color: 'gray', line_thickness: '5px', line_width: '100%' },
     { text: '受託者募集一覧', textSize: 8 },
-    ...developerData.map((recruit, index) => ({
-      sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
-      buttonText: `この人の募集に応募する！`,
-      onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
-      text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
-      imageSrc: IMAGE1,
-    })),
-    { line_color: 'gray', line_thickness: '3px', line_width: '100%' },
+    ...developerData.flatMap((recruit, index) => [
+      {
+        sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
+        buttonText: `この人の募集に応募する！`,
+        onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
+        text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
+        imageSrc: IMAGE1,
+      },
+      {
+        line_color: 'green', // 緑色の線を追加
+        line_thickness: '1px',
+        line_width: '100%',
+      },
+    ]),
+    { line_color: 'gray', line_thickness: '5px', line_width: '100%' },
     { text: '開発者募集一覧', textSize: 8 },
-    ...trusteeData.map((recruit, index) => ({
-      sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
-      buttonText: `この人の募集に応募する！`,
-      onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
-      text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
-      imageSrc: IMAGE1,
-    })),
+    ...trusteeData.flatMap((recruit, index) => [
+      {
+        sideButtonPosition: index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center',
+        buttonText: `この人の募集に応募する！`,
+        onClick: () => my_Application(recruit, myRecruitmentData), // 修正: My_recruitmentData -> myRecruitmentData
+        text: `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`,
+        imageSrc: IMAGE1,
+      },
+      {
+        line_color: 'green', // 緑色の線を追加
+        line_thickness: '1px',
+        line_width: '100%',
+      },
+    ]),
+    
   ];
   return (
     <div>
