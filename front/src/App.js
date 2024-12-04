@@ -15,12 +15,12 @@ import Header from './component/Head/Header';
 function App() {
   // 現在のページを管理する状態変数
   const [currentPage, setCurrentPage] = useState("login");
-
+  const [loginAddress, setLoginAddress] = useState("");  // メールアドレスを保持
   // ページコンポーネントをレンダリングする関数
   const renderPage = () => {
     switch (currentPage) 
     {
-      case "login": return <Login setCurrentPage={setCurrentPage} />; // LoginコンポーネントにsetCurrentPageを渡す
+      case "login": return <Login setCurrentPage={setCurrentPage} set_login_address={setLoginAddress} />; // LoginコンポーネントにsetCurrentPageを渡す
       case "profile": return <Profile />;
       case "account": return <Account setCurrentPage={setCurrentPage}/>;
       case "production": return <Production />;
@@ -55,6 +55,7 @@ function App() {
           open_name="項目を閉じる" close_name="他のページを開く"
           Page={currentPage}
           logout={handleLogout} // ログアウト処理
+          name={loginAddress}
         />
       )}
       {/* 現在のページを表示 */}

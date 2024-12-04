@@ -1,33 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Side_button from '../../component/Main_container/Side_button/Side_button';
 import Login_data from '../../component/Data/Login_data'; // Address_Data コンポーネントをインポート
+import Data_login from './Data_login'; // Data_login コンポーネントをインポート
 import './Login.css';
 
-function Login({ setCurrentPage }) {
+function Login({ setCurrentPage, set_login_address }) {
     const [inputText, setInputText] = useState({ password: "", mail_address: "" });
     const [OK_or_NO_text, OK_or_NO_draw] = useState("");
-    const [loginAddress, setLoginAddress] = useState(""); // ログイン後のアドレスを state として保持
-
-    const Login_email = "", Login_password = ""; // ログインする際のアドレスとパスワード
+    const dataLoginRef = useRef(); // Data_login コンポーネントの ref
 
     // 入力変更ハンドラー
     const handleInputChange = (event) => {
-        const { name, value } = event.target; // 入力要素の name と value を取得
+        const { name, value } = event.target;
         setInputText((prevState) => ({
-            ...prevState, // 既存の state を保持
-            [name]: value // 対応するプロパティを更新
+            ...prevState,
+            [name]: value
         }));
     };
 
     // ログイン認証処理
     const access = (email, password) => {
-        if (Login_email === email && Login_password === password) {
+        // checkLogin 関数を呼び出して、ユーザー情報が一致するか確認
+        const user = dataLoginRef.current.checkLogin(email, password);
+        if (user) {
             OK_or_NO_draw("");
             setCurrentPage("profile"); // ログイン成功後、profileページに遷移
-            // Address_Data コンポーネントでアドレス情報を管理
-            setLoginAddress(email);  // ログイン時にemailを親コンポーネントに渡す
-        } else 
-        {
+            set_login_address(email);  // 親コンポーネントにメールアドレスを渡す
+        } else {
             OK_or_NO_draw("パスワード、またはメールアドレスが間違っています");
         }
     };
@@ -41,8 +40,8 @@ function Login({ setCurrentPage }) {
             <h1>開発者により具体的に我々の作って欲しいホームページを届けよう</h1>
             <h2>メールアドレスを入力してください</h2>
             <input
-                type="email" // メールアドレス入力フィールド
-                name="mail_address" // フィールド名を指定
+                type="email"
+                name="mail_address"
                 value={inputText.mail_address}
                 onChange={handleInputChange}
                 placeholder="ここにメールアドレスを入力"
@@ -50,8 +49,8 @@ function Login({ setCurrentPage }) {
 
             <h2>パスワードを入力してください</h2>
             <input
-                type="password" // パスワード入力フィールド
-                name="password" // フィールド名を指定
+                type="password"
+                name="password"
                 value={inputText.password}
                 onChange={handleInputChange}
                 placeholder="ここにパスワードを入力"
@@ -69,9 +68,11 @@ function Login({ setCurrentPage }) {
             <p>入力されたメールアドレス(テストプレイ用で表示): {inputText.mail_address}</p>
             <p>入力されたパスワード(テストプレイ用で表示): {inputText.password}</p>
 
+            {/* ログイン時のメールアドレスをLogin_dataコンポーネントに保持 */}
+            <Login_data take_address={inputText.mail_address} />
 
-            {/* ログイン後のアドレスを表示 */}
-            <p>現在のログインアドレス: {loginAddress}</p>
+            {/* Data_login コンポーネントを ref を使って組み込む */}
+            <Data_login ref={dataLoginRef} />
         </div>
     );
 }

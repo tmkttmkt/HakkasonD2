@@ -54,7 +54,7 @@
 /*ユーザーネーム、もしくはメールアドレスなどの表示させる*/
 .message_to_you 
 {
-    padding: 2px 5px;
+    padding: 10px 20px;
     background-color: rgba(221, 255, 0, 0.7); /* 背景色に透明度を追加（赤色、透明度70%） */
     color: rgb(36, 0, 0);
     border: none;

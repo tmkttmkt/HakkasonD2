@@ -1,18 +1,18 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
-
-const Login_data = forwardRef((props, ref) => 
+import React,{useState} from 'react';
+import Send_to_Hedear_data from '../Head/Send_to_Hedear_data'
+function Login_data({ take_address }) 
 {
-    const [loginAddress, setLoginAddress] = useState("");
-
-    // 親コンポーネントからの関数呼び出しを可能にする
-    useImperativeHandle(ref, () => ({
-        setLoginAddress: (address) => {
-            console.log("Login_data: setLoginAddress 実行", address); // デバッグ用
-            setLoginAddress(address);
-        },
-    }));
-
-
-});
-
-export default Login_data;
+    // take_addressは関数として渡される
+    const [mail,set_mail]=useState('');
+    
+    const Take_Login_mail_address=()=>//ログイン時に入力したメールアドレスを取得
+    {
+        set_mail(take_address);
+    }
+    return(
+        <dev>
+            
+        </dev>
+    );
+}
+export default  Login_data;
