@@ -5,7 +5,8 @@ export const my_Recruitment = async () =>
 {
   // 登録情報管理しているデータベースを開き、データを追加する処理を実装
   const userData = await Registration_Data(); // 自分の登録情報取得
-  const newRecruitment = {
+  const newRecruitment = 
+  {
     username: "○○",
     text: "こんにちは！あたしのサイト作ってよ！ばか！",
     person_looking_for: "受託者",
