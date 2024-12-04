@@ -51,7 +51,7 @@ router.post('/signup',postsignup);
 
 async function postloginmail(req, res){
 }
-router.post('/mail',postloginmail);
+router.post('/email',postloginmail);
 
 
 

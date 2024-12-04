@@ -12,6 +12,7 @@ const port = 5000;
 app.use("/login",require('./login.js'));
 app.use("/ranking",require('./ranking.js'));
 app.use("/point",require('./point.js'));
+app.use("/production",require('./production.js'));
 
 // ルートエンドポイントにアクセスしたときに「Hello World」を表示
 app.get('/', (req, res) => {
