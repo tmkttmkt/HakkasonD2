@@ -25,5 +25,5 @@ export const Registration_Data = async () => //登録情報が入ったデータ
 export const my_Registration_Data= async () => //メールアドレス情報を基に登録情報保存されたデータベース内の一部テーブルを取得する関数
 {
     return [];
-}
+}//👈これまだ作り途中の関数だから！！！！！！！！！！！！！
 

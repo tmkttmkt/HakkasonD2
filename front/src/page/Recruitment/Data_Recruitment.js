@@ -1,10 +1,10 @@
-import { fetchRecruitmentData, Registration_Data } from '../../component/Data/Data';
+import { fetchRecruitmentData,my_Registration_Data } from '../../component/Data/Data';
 
 // 自分の登録データを管理する関数
 export const my_Recruitment = async () => 
 {
   // 登録情報管理しているデータベースを開き、データを追加する処理を実装
-  const userData = await Registration_Data(); // 自分の登録情報取得
+  const userData = await my_Registration_Data(); // 自分の登録情報取得👈これまだ作り途中の関数だから！！！！！！！！！！！！！
   const newRecruitment = 
   {
     username: "○○",
