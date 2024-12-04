@@ -1,34 +1,38 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
-const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const path = require('path');
-//どっちやろなー
-//const cloudinary = require('cloudinary').v2;
-//const { v2: cloudinary } = require('cloudinary');
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET,
-});
-
-require('dotenv').config(); 
 const router = express.Router();
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_PASS
-const supabase = createClient(supabaseUrl, supabaseKey)
+const culudinary = require('./cludinary_wrapper.js');
+const supabase = require('./supabase_wrapper.js');
 const table="produc"
 
 
 
-async function getranking(req, res){
-}
-router.get('/',getranking);
 
-async function getdetail(req, res){
+async function getall(req, res){
 }
-router.get('/:id',getdetail);
+router.get('/:id',getall);
+
+
+async function postdata(req, res){
+}
+router.post('/',postdata);
+
+
+async function delldata(req, res){
+}
+router.dell('/:id',delldata);
+
+
+async function gettype(req, res){
+  const {data,error} = await supabase.from("roles").select("*");
+  if (error) {
+    console.error('Error inserting data:', error);
+    res.status(500).send();
+  }
+  else{
+    res.json(data);
+  }
+}
+router.get('/:id',gettype);
 
 
 
