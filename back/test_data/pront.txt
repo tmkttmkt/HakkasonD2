@@ -22,3 +22,12 @@ id:text,creator:text,type:int2,url:textの40行
 のテストデータをcvsとして作って
 typeは0~4とする
 主キーはidで八文字のランダムな英数字
+
+
+id:text,creator:text,produc:text,order:int8,explanation:textの15行
+のテストデータをcsvとして作って
+creatorはuser_idを外部参照
+producはなし
+orderは0~4とする
+explanationは募集文
+主キーはidで八文字のランダムな英数字
