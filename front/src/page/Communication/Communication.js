@@ -7,8 +7,10 @@ const Communication = ({ setCurrentPage, login_address }) => {
   const [userMessages, setUserMessages] = useState([]); // ユーザー名のリスト
 
   // データ取得 (Data_communicationからデータを取得)
-  useEffect(() => {
-    const fetchData = async () => {
+  useEffect(() => 
+  {
+    const fetchData = async () => 
+    {
       const matchedUsernames = Data_communication(login_address); // メールアドレスを渡して検索
       setUserMessages(matchedUsernames); // ユーザーネームを保存
     };

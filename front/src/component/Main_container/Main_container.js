@@ -5,7 +5,8 @@ import Text_box from './Text_box/Text_box';
 import Text_input from './Text_input/Text_input';
 import Select_input from './Select_input/Select_input';  // SelectInput をインポート
 import Line from './Line/Line'; // Lineコンポーネントをインポート
-const MainContainer = ({ layoutData }) => {
+const MainContainer = ({ layoutData }) => 
+{
   return (
     <div className="main-container">
       {layoutData.map((item, index) => (

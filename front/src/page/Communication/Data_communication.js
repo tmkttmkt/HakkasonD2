@@ -10,7 +10,7 @@ export const Registration_Data = () =>
   ];
 };
 //---------------データベースからデータの取得↑-----------------
-const Data_communication = (myEmail) => 
+const Data_communication = (myEmail) => //chatできる相手がいるかを探す関数
 {
   const registrations = Registration_Data(); // 全登録データを取得
 
