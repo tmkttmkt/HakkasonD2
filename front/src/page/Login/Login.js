@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import Side_button from '../../component/Main_container/Side_button/Side_button';
-import Login_data from '../../component/Data/Login_data'; // Login_data コンポーネントをインポート
 import Data_login from './Data_login'; // Data_login コンポーネントをインポート
 import './Login.css';
 
@@ -65,9 +64,6 @@ function Login({ setCurrentPage, set_login_address }) {
 
             <p>入力されたメールアドレス(テストプレイ用で表示): {inputText.mail_address}</p>
             <p>入力されたパスワード(テストプレイ用で表示): {inputText.password}</p>
-
-            {/* ログイン時のメールアドレスをLogin_dataコンポーネントに保持 */}
-            <Login_data take_address={inputText.mail_address} />
 
             {/* Data_login コンポーネントを ref を使って組み込む */}
             <Data_login ref={dataLoginRef} />

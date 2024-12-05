@@ -41,7 +41,10 @@ function App()
   // ログアウト処理
   const handleLogout = () => 
   {
-    setCurrentPage("login"); // ログイン画面に戻す
+    setCurrentPage("login");//ログイン画面に戻す
+    set_Apply_flag(true);//初期状態にリセット
+    set_Recruitment_flag(true);//初期状態にリセット
+    setLoginAddress("");//ログイン時のメールアドレスをリセット
   };
 
   return (

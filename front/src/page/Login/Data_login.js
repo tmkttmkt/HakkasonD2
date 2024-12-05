@@ -1,5 +1,15 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from "react";
-import { Registration_Data } from '../../component/Data/Data_take';
+//ーーーーー
+export const Registration_Data = () => //登録情報が入ったデータベースのデータすべて取得する関数
+{
+    return [
+      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username123456789012345678901234567890123456789012345678901234567890@example.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.com", 応募相手: "いない", 募集相手: "" }
+    ];
+};
+//ーーーーー
 
 const Data_login = forwardRef(({ fetchUrl }, ref) => 
 {
@@ -15,7 +25,7 @@ const Data_login = forwardRef(({ fetchUrl }, ref) =>
   // 初回レンダリング時に登録データを取得
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedRegistrationData = await Registration_Data(); // 登録データ取得
+      const fetchedRegistrationData = Registration_Data(); // 登録データ取得
       setRegistrationData(fetchedRegistrationData); // 登録データセット
     };
     fetchData();
