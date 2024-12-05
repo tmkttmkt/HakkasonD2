@@ -1,7 +1,7 @@
 // Data_Recruitment.js
 
 
-export const fetchRecruitmentData = async () => //募集状況を管理するデータベースの内容をすべて取得する関数
+export const fetchRecruitmentData = () => //募集状況を管理するデータベースの内容をすべて取得する関数
 {
     return [
       { username: "○○", text: "こんにちは！あたしのサイト作ってよ！ばか！", person_looking_for: "受託者", mail_address: "aaaaa" },
@@ -12,7 +12,7 @@ export const fetchRecruitmentData = async () => //募集状況を管理するデ
     ];
 };
   
-export const Registration_Data = async () => //登録情報が入ったデータベースのデータすべて取得する関数
+export const Registration_Data = () => //登録情報が入ったデータベースのデータすべて取得する関数
 {
     return [
       { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" },
@@ -22,8 +22,7 @@ export const Registration_Data = async () => //登録情報が入ったデータ
     ];
 };
 
-export const my_Registration_Data= async () => //メールアドレス情報を基に登録情報保存されたデータベース内の一部テーブルを取得する関数
+export const my_Registration_Data= () => //メールアドレス情報を基に登録情報保存されたデータベース内の一部テーブルを取得する関数
 {
     return [];
 }//👈これまだ作り途中の関数だから！！！！！！！！！！！！！
-

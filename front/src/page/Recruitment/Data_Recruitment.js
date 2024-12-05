@@ -1,24 +1,80 @@
-import { fetchRecruitmentData,my_Registration_Data } from '../../component/Data/Data';
-
-// 自分の登録データを管理する関数
-export const my_Recruitment = async () => 
+export const fetchRecruitmentData = () => //募集状況を管理するデータベースの内容をすべて取得する関数
 {
-  // 登録情報管理しているデータベースを開き、データを追加する処理を実装
-  const userData = await my_Registration_Data(); // 自分の登録情報取得👈これまだ作り途中の関数だから！！！！！！！！！！！！！
+    return [
+      { username: "○○", text: "こんにちは！あたしのサイト作ってよ！ばか！", person_looking_for: "受託者", mail_address: "aaaaa" },
+      { username: "××", text: "こんばんは！サイト作ればか！", person_looking_for: "開発者", mail_address: "ddddd" },
+      { username: "△△", text: "おはようございます！誰か私にオリジナルサイトを作ってくれないでしょうか？", person_looking_for: "受託者", mail_address: "bbbb" },
+      { username: "□□", text: "昼過ぎに連絡します！貴方がほしいアプリを完璧に作って見せます", person_looking_for: "開発者", mail_address: "cccc" },
+      { username: "XとY", text: "数学サイト作ります！、ちなみに俺と意見が会はないなら即クレームします覚悟しておいてください", person_looking_for: "開発者", mail_address: "dddd" }
+    ];
+};
+  
+export const Registration_Data = () => //登録情報が入ったデータベースのデータすべて取得する関数
+{
+    return [
+      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" },
+      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username123456789012345678901234567890123456789012345678901234567890@example.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.com", 応募相手: "いない", 募集相手: "" }
+    ];
+};
+// 募集状況データベースに新しい募集データを追加する関数
+export const AddRecruitmentData = (appliedUserEmail) => 
+{
+  // ここで、新しい募集データをデータベースに追加する処理を記述します
+  // 仮にコンソールに出力して処理が行われたことを確認する場合
+  console.log(`募集データを追加しました: ${appliedUserEmail}`);
+};
+
+// 自分の登録情報を更新する関数
+export const updateMyData = (email, fieldToUpdate) => 
+{
+  // ここで、データベース内の自分の登録情報を更新する処理を記述します
+  // 仮にコンソールに出力して更新内容を確認する場合
+  console.log(`メールアドレス: ${email} の情報を ${fieldToUpdate} に更新しました`);
+  // 実際には、データベースの更新操作が必要になります
+};
+
+// 募集状況管理データベースから指定されたメールアドレスのデータを削除する関数
+export const DeleteRecruitmentData = (appliedUserEmail) => 
+{
+  // ここで、指定されたメールアドレスの募集データをデータベースから削除する処理を記述します
+  // 仮にコンソールに出力して削除操作を確認する場合
+  console.log(`募集データを削除しました: ${appliedUserEmail}`);
+};
+
+// 必要に応じて、データベースの操作部分を適切に実装してください
+
+export const my_Registration_Data= (My_address) => //メールアドレス情報を基に登録情報保存されたデータベース内の一部テーブルを取得する関数
+{
+    return { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" };
+}//👈これまだ作り途中の関数だから！！！！！！！！！！！！！
+
+//fetchRecruitmentData・・・募集でデータベースの読み込み関数
+//Registration_Data ・・・登録データベースの読み込み関数
+//AddRecruitmentData・・・募集データベースに新規募集データ追加関数
+//DeleteRecruitmentData・・・募集データからメールアドレスを基に募集レコード削除
+//my_Registration_Data・・・メールアドレスを基に自分の登録データのあるレコードを取得
+//updateMyData・・・既存のデータベース内の特定のメールアドレスの登録データのレコード内容を変更する
+
+//ーーーーーこれ以降上はデータベースプログラムーーーーーーーーーーーー
+
+export const my_Recruitment = async (recruitmentInput) => 
+{
+  // 引数で受け取った情報を展開
+  const { recruitment_message, Developer_or_trustee,My_address} = recruitmentInput;//募集が投稿されたらその情報を取得する
+  const userData = my_Registration_Data(My_address);//送られてきたメールアドレスもとに自分の登録情報レコードを取得
+  // 新しい募集データを作成
   const newRecruitment = 
   {
-    username: "○○",
-    text: "こんにちは！あたしのサイト作ってよ！ばか！",
-    person_looking_for: "受託者",
-    mail_address: "aaaaa"
-  };//今自分が入力した情報(仮)
-
-  // 新しいデータを募集状況データベースに追加
-  console.log(`新しい募集データを追加: ${JSON.stringify(newRecruitment)}`);
-
-  // 自分の登録情報の応募相手欄を「いない」に変更
-  await updateMyData(userData[0].メールアドレス, "いない");
-
+    username: userData?.[0]?.username || "未設定", // 投稿した人のユーザーネームを決定
+    text: recruitment_message, //投稿文決定
+    person_looking_for: Developer_or_trustee, // 開発者か受託者か？の情報を決定
+    mail_address: My_address || "不明", //メールアドレス決定
+  };
+  AddRecruitmentData(newRecruitment);//新しく募集データをデータベースに加える
+  if(userData?.[0]?.メールアドレス)updateMyData(userData[0].メールアドレス, "いない");// 自分の登録情報の応募相手欄を「いない」に変更
+  
   // 追加したデータを返す
   return newRecruitment;
 };
@@ -26,25 +82,14 @@ export const my_Recruitment = async () =>
 // my_Application 内で my_RecruitmentData の呼び出しを修正
 export const my_Application = async (recruit, myRecruitmentData) => 
 {
-  const recruitmentData = await fetchRecruitmentData(); // データを取得
-  const appliedUserEmail = recruit.mail_address;
-  const userData = await my_Recruitment(); // 修正: my_RecruitmentData -> my_Recruitment
-  const userEmail = userData[0].メールアドレス;
-  await updateMyData(userEmail, appliedUserEmail); // 自分のデータを更新
-  await updateRecruitmentData(appliedUserEmail, userEmail); // 応募先のデータを更新
-};
-// 募集状況データ更新関数
-const updateRecruitmentData = async (applicantEmail, userEmail) => {
-  // データベースにアクセスして応募先のデータを更新
-  console.log(`募集データ更新: 応募相手の欄を ${userEmail} に変更`);
-  // 実際のDB操作コード（例: FirebaseやSQLなど）を記述
-};
-
-// 自分のデータ更新関数
-const updateMyData = async (userEmail, applicantEmail) => {
-  // ユーザーのデータベースを開き、募集相手欄を更新
-  console.log(`自分のデータ更新: 募集相手の欄を ${applicantEmail} に変更`);
-  // 実際のDB操作コード（例: FirebaseやSQLなど）を記述
+  //recruitで押したボタンの募集を投稿した人のメールアドレス情報を受け取ることが可能
+  //myRecruitmentDataで自分のログイン時のメールアドレスを取得可能
+  const appliedUserEmail = recruit.mail_address;//応募した募集データの投稿者のメールアドレスを変数に格納
+  //const userData = my_Registration_Data(appliedUserEmail); // 投稿者の登録情報のレコードを取得
+  updateMyData(myRecruitmentData, appliedUserEmail,"募集相手"); //自分のメールアドレス情報を基に自分の募集相手の欄を「募集相手：相手のメールアドレス」に変更する
+  updateMyData(appliedUserEmail,myRecruitmentData,"応募相手"); //格納された相手のメールアドレスを基に相手の応募相手の欄を「応募相手：自分のメールアドレス」に変更する
+  DeleteRecruitmentData(appliedUserEmail);//募集状況管理データベースからその人の募集レコードを削除
+  return 0;
 };
 
 /*

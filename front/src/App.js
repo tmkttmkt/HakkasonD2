@@ -17,18 +17,21 @@ function App()
   // 現在のページを管理する状態変数
   const [currentPage, setCurrentPage] = useState("login");
   const [loginAddress, setLoginAddress] = useState("");  // メールアドレスを保持
+  const [Recruitment_flag,set_Recruitment_flag]=useState(true);//自身の募集の可否
+  const [Apply_flag,set_Apply_flag]=useState(true);//自身の募集の可否
   // ページコンポーネントをレンダリングする関数
-  const renderPage = () => {
+  const renderPage = () => 
+  {
     switch (currentPage) 
     {
       case "login": return <Login setCurrentPage={setCurrentPage} set_login_address={setLoginAddress} />; // LoginコンポーネントにsetCurrentPageを渡す
       case "profile": return <Profile />;
-      case "account": return <Account setCurrentPage={setCurrentPage}/>;
+      case "account": return <Account setCurrentPage={setCurrentPage} set_login_address={setLoginAddress}/>;
       case "production": return <Production />;
-      case "communication": return <Communication  setCurrentPage={setCurrentPage}/>;
+      case "communication": return <Communication  setCurrentPage={setCurrentPage} login_address ={loginAddress}/>;
       case "SUIHANN": return <SUIHANN />;
       case "ranking": return <Ranking />;
-      case "recruitment": return <Recruitment />;
+      case "recruitment": return <Recruitment name={loginAddress} set_Recruitment_flag={set_Recruitment_flag} Recruitment_flag={Recruitment_flag} Apply_flag={Apply_flag} set_Apply_flag={set_Apply_flag}/>;
       case "billing": return <Billing />;
       case "chat": return <Chat setCurrentPage={setCurrentPage} />;
       default: return <Login setCurrentPage={setCurrentPage} />; // デフォルトはログイン画面

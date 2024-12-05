@@ -1,6 +1,7 @@
 import React from 'react';
 
-const Line = ({ color = '#000', thickness = '2px', width = '100%' }) => {
+const Line = ({ color = '#000', thickness = '2px', width = '100%' }) => 
+{
   return (
     <div 
       style={{

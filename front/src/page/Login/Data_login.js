@@ -1,7 +1,8 @@
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from "react";
-import { Registration_Data } from '../../component/Data/Data';
+import { Registration_Data } from '../../component/Data/Data_take';
 
-const Data_login = forwardRef(({ fetchUrl }, ref) => {
+const Data_login = forwardRef(({ fetchUrl }, ref) => 
+{
   const [email, setEmail] = useState(""); // 初期値
   const [password, setPassword] = useState(""); // 初期値
   const [registrationData, setRegistrationData] = useState([]); // 登録データ

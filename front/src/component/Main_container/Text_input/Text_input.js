@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-const TextInput = ({ onTextChange, value = '', width, height, maxLength = 300 }) => {
+const TextInput = ({ onTextChange, value = '', width, height, maxLength = 300 }) => 
+{
   const [inputValue, setInputValue] = useState(value);
   const [isLimitReached, setIsLimitReached] = useState(false);
 
@@ -8,14 +9,17 @@ const TextInput = ({ onTextChange, value = '', width, height, maxLength = 300 })
   const defaultWidth = width || '90vw'; // デバイス幅の90%
   const defaultHeight = height || '20vh'; // デバイス高さの20%
 
-  const handleChange = (e) => {
+  const handleChange = (e) => 
+  {
     const newValue = e.target.value;
-
-    if (newValue.length <= maxLength) {
+    if (newValue.length <= maxLength) 
+    {
       setInputValue(newValue);
       onTextChange(newValue); // 入力値を親に通知
       setIsLimitReached(false); // 制限に達していないのでリセット
-    } else {
+    }
+    else 
+    {
       setIsLimitReached(true); // 制限に達した場合にフラグを立てる
     }
   };

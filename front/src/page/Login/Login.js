@@ -1,43 +1,38 @@
 import React, { useState, useRef } from 'react';
 import Side_button from '../../component/Main_container/Side_button/Side_button';
-import Login_data from '../../component/Data/Login_data'; // Address_Data コンポーネントをインポート
+import Login_data from '../../component/Data/Login_data'; // Login_data コンポーネントをインポート
 import Data_login from './Data_login'; // Data_login コンポーネントをインポート
 import './Login.css';
 
-function Login({ setCurrentPage, set_login_address }) 
-{
+function Login({ setCurrentPage, set_login_address }) {
     const [inputText, setInputText] = useState({ password: "", mail_address: "" });
     const [OK_or_NO_text, OK_or_NO_draw] = useState("");
     const dataLoginRef = useRef(); // Data_login コンポーネントの ref
 
     // 入力変更ハンドラー
-    const handleInputChange = (event) => 
-    {
+    const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setInputText((prevState) => (
-        {
+        setInputText((prevState) => ({
             ...prevState,
             [name]: value
         }));
     };
 
     // ログイン認証処理
-    const access = (email, password) => 
-    {
+    const access = (email, password) => {
         // checkLogin 関数を呼び出して、ユーザー情報が一致するか確認
         const user = dataLoginRef.current.checkLogin(email, password);
-        if (user) 
-        {
+        if (user) {
             OK_or_NO_draw("");
             setCurrentPage("profile"); // ログイン成功後、profileページに遷移
             set_login_address(email);  // 親コンポーネントにユーザーネームを渡す
-        } 
-        else OK_or_NO_draw("パスワード、またはメールアドレスが間違っています");//入力時にぴったり合う登録データがなかったら赤文字で間違えを表示
+        } else OK_or_NO_draw("パスワード、またはメールアドレスが間違っています");
     };
-    const handleClick = () => 
-    {
+
+    const handleClick = () => {
         setCurrentPage("account"); // アカウント作成画面へ遷移
     };
+
     return (
         <div className="login-container">
             <h1>開発者により具体的に我々の作って欲しいホームページを届けよう</h1>
@@ -79,4 +74,5 @@ function Login({ setCurrentPage, set_login_address })
         </div>
     );
 }
+
 export default Login;

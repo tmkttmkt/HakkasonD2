@@ -1,14 +1,33 @@
-import React, { useState } from "react";
-const Data_communication = async () => 
+// Data_communication.
+//---------------データベースからデータの取得↓-----------------
+export const Registration_Data = () => 
 {
-    // 仮データ（APIから取得する場合はfetchを利用）
-    return [
-      { username: 'communicationボタン1' },
-      { username: 'Bob' },
-      { username: 'Charlie'}
-    ];//このreturnで返しているリスト内に応募した人のユーザーネームと、その人が書いたメッセージデータが来ればOK
-};  
+  return [
+    { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "B" },
+    { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "" },
+    { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" },
+    { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username@example.com", 応募相手: "いない", 募集相手: "" },
+  ];
+};
+//---------------データベースからデータの取得↑-----------------
+const Data_communication = (myEmail) => 
+{
+  const registrations = Registration_Data(); // 全登録データを取得
+
+  // 条件に一致するレコードのユーザーネームを抽出
+  const matchedUsernames = registrations
+    .filter(
+      (record) =>
+        record["募集相手"] === myEmail || // 募集相手が自分のメールアドレス
+        (record["メールアドレス"] === myEmail && record["応募相手"] !== "いない") // 自分のメールアドレスのレコードに応募相手が存在
+    )
+    .map((record) => record["ユーザーネーム"]); // ユーザーネームを取得
+
+  return matchedUsernames; // ユーザーネームのリストを返す
+};
+
 export default Data_communication;
+
 /*
 const Data_communication = async () => 
     {
