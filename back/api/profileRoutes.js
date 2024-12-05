@@ -1,12 +1,6 @@
 process.noDeprecation = true;
 const express = require("express");
-const { createClient } = require("@supabase/supabase-js");
-
-// Supabase設定
-const SUPABASE_URL = "https://hycrcwksixagdnummgax.supabase.co"; // あなたのSupabase URL
-const SUPABASE_KEY = "SUPABASE_PASS=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5Y3Jjd2tzaXhhZ2RudW1tZ2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI5MzAwMjUsImV4cCI6MjA0ODUwNjAyNX0.LkAxnGKldCFnBvvb3vlKbehGBjkpfn1dG_ehqnNgS-k"; // あなたのAPIキー
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+const {supabase,generateUnusedId}=require("./supabase_wrapper.js")
 // ルーターを作成
 const router = express.Router();
 

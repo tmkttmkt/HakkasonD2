@@ -1,11 +1,6 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config(); //.envファイル関連
 const router = express.Router();
-
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_PASS
-const supabase = createClient(supabaseUrl, supabaseKey);
+const {supabase,generateUnusedId} = require('./supabase_wrapper.js');
 
 // テーブル名
 const table = 'personal';
