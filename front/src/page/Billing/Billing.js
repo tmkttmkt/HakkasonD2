@@ -1,69 +1,72 @@
 import React, { useState } from 'react';
-import MainContainer from '../../component/Main_container/Main_container'; // MainContainerをインポート
-import IMAGE1 from './images/仮画像1.png'// 画像のパス
-const Billing = () => 
-{
-  const page_A = () => 
-  {
-    console.log('ページAがクリックされました');
+import IMAGE1 from './images/MATSUOKA.jpg'; // 画像のパス
+
+const Billing = () => {
+  const [ricePoints, setRicePoints] = useState(''); // お米ポイントの入力値を管理する
+
+  const handleRicePointsChange = (e) => {
+    setRicePoints(e.target.value); // 入力値を更新
   };
 
-  const page_B = () => 
-  {
-    console.log('ページBがクリックされました');
+  const handlePurchase = () => {
+    if (ricePoints) {
+      console.log(`お米ポイントを ${ricePoints} 購入します！`);
+      alert(`お米ポイントを ${ricePoints} 購入しました！`);
+    } else {
+      alert('お米ポイントの量を入力してください！');
+    }
   };
 
-  const page_C = () => 
-  {
-    console.log('ページCがクリックされました');
-  };
-
-  const page_D = () => 
-  {
-
-  };
-
-  // メインコンテナに渡すデータを定義
-  const layoutData = [
-    {
-      sideButtonPosition: 'left',
-      buttonText: '課金画面ボタン1',
-      onClick: page_A,
-      text: '課金画面に表示させたい文1',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'left',
-      buttonText: '課金画面ボタン2',
-      onClick: page_B,
-      text: '課金画面に表示させたい文2',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'right',
-      buttonText: '課金画面ボタン3',
-      onClick: page_C,
-      text: '課金画面に表示させたい文3',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'center',
-      buttonText: '課金画面ボタン4',
-      onClick: page_D,
-      text: '課金画面に表示させたい文4',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-  ];
   return (
     <div>
-      <h1>課金画面です(仮配置)</h1>
-      
-      {/* MainContainerコンポーネントを使って、layoutDataを渡す */}
-      <MainContainer layoutData={layoutData} />
+      <h1>課金画面</h1>
+
+      {/* 欲しいお米ポイントの入力フォーム */}
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <h3>欲しいお米ポイントの量を入力してね！</h3>
+        <h1>※1お米ポイント=1円</h1>
+        <input
+          type="number"
+          value={ricePoints}
+          onChange={handleRicePointsChange}
+          placeholder="例: 1000"
+          style={{
+            padding: '10px',
+            fontSize: '16px',
+            width: '200px',
+            marginBottom: '10px',
+          }}
+        />
+        <br />
+        <button
+          onClick={handlePurchase}
+          style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: 'green',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+          }}
+        >
+          課金する！
+        </button>
+        <br />
+        {/* 画像を表示 */}
+        <img
+          src={IMAGE1}
+          alt="お米ポイントの説明"
+          style={{
+            marginTop: '20px',
+            width: '300px',
+            height: 'auto',
+          }}
+        />
+      </div>
+      <h2>課金してくれるよな！( ´∀｀ )</h2>
+      <h1>　　　</h1>
+      <h1>　　　</h1>
     </div>
   );
 };

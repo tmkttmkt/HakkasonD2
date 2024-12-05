@@ -121,7 +121,7 @@ const Recruitment = ({name,set_Recruitment_flag,Recruitment_flag,set_Apply_flag,
       },
     }:
     {
-      text:"応募ありがとう！コミュニケーション画面で募集者の人とチャットをつなごう",
+      text:"応募ありがとう！コミュニケーション画面で募集者の人とチャットをつなごう！",
       textSize: 5,
       imageSrc:IMAGE1,
     },
