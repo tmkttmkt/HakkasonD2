@@ -21,12 +21,17 @@
 - method:GET
 - pass:/:id
 - body={}
-- res={success:bool}
+- res={url:str,creator:str,type:int}
+##
+- method:GET
+- pass:/creator/:id
+- body={}
+- res={ids:[int]}
 ## FormData
 - method:POST
 - pass:/
-- body={file:filedata,type:str,creator:str}
-- res={id:str|null}
+- body={file:filedata,type:int,creator:str}
+- res={id:str}
 ## 
 - method:DELL
 - pass:/:id
@@ -37,7 +42,7 @@
 - pass:/type
 - body={}
 - res={success:bool}
-- res={lsit[id:int,role:str]}
+- res={list[{id:int,role:str}]}
 
 APIを３つ
 いしゅーのやつ書く
