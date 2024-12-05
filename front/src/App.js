@@ -30,7 +30,7 @@ function App()
       case "production": return <Production />;
       case "communication": return <Communication  setCurrentPage={setCurrentPage} login_address ={loginAddress}/>;
       case "SUIHANN": return <SUIHANN />;
-      case "ranking": return <Ranking />;
+      case "ranking": return <Ranking my_address={loginAddress}/>;
       case "recruitment": return <Recruitment name={loginAddress} set_Recruitment_flag={set_Recruitment_flag} Recruitment_flag={Recruitment_flag} Apply_flag={Apply_flag} set_Apply_flag={set_Apply_flag}/>;
       case "billing": return <Billing />;
       case "chat": return <Chat setCurrentPage={setCurrentPage} />;

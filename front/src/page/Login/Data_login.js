@@ -9,6 +9,10 @@ export const Registration_Data = () => //登録情報が入ったデータベー
     { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "D", 応募相手: "いない", 募集相手: "", 米ポイント: 200 }
   ];
 };
+export const my_Registration_Data= (My_address) => //メールアドレス情報を基に登録情報保存されたデータベース内の一部テーブルを取得する関数
+{
+    return { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" };
+}
 //ーーーーー
 
 const Data_login = forwardRef(({ fetchUrl }, ref) => 
