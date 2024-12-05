@@ -18,10 +18,10 @@ export const fetchRecruitmentData = () => //募集状況を管理するデータ
 export const Registration_Data = () => //登録情報が入ったデータベースのデータすべて取得する関数
 {
     return [
-      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "", 募集相手:"" },
-      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手:"" },
-      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" },
-      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username123456789012345678901234567890123456789012345678901234567890@example.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.com", 応募相手: "いない", 募集相手: "" }
+      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" ,米ポイント:0},
+      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "",米ポイント:0},
+      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" ,米ポイント:0},
+      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username123456789012345678901234567890123456789012345678901234567890@example.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.com", 応募相手: "いない", 募集相手: "" ,米ポイント:0}
     ];
 };
 //ーーーーこれ以降上はデータベースからデータ読み込みプログラムーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -167,7 +167,7 @@ const Recruitment = ({name,set_Recruitment_flag,Recruitment_flag,set_Apply_flag,
           if(Apply_flag)
           {
               my_Application(recruit,My_data);//応募する
-              Apply_flag(false);
+              set_Apply_flag(false);
           }
         }, // 修正: My_recruitmentData -> myRecruitmentData
         text:Recruitment_flag ? `${recruit.person_looking_for}の${recruit.username} さん:「${recruit.text}」`:null,

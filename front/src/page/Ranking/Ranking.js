@@ -1,67 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MainContainer from '../../component/Main_container/Main_container'; // MainContainerをインポート
-import IMAGE1 from './images/仮画像1.png'// 画像のパス
-const Ranking = () => 
-{
-  const page_A = () => 
-  {
-    console.log('ページAがクリックされました');
-  };
+import IMAGE1 from './images/仮画像1.png'; // 画像のパス
 
-  const page_B = () => 
-  {
-    console.log('ページBがクリックされました');
-  };
+// ーーーー登録情報データベースから読み込むーーーー
+export const Registration_Data = () => {
+  return [
+    { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "", 米ポイント: 100 },
+    { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "", 米ポイント: 50 },
+    { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "", 米ポイント: 80 },
+    { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "D", 応募相手: "いない", 募集相手: "", 米ポイント: 200 }
+  ];
+};
 
-  const page_C = () => 
-  {
-    console.log('ページCがクリックされました');
-  };
+// ーーーーランキングコンポーネントーーーー
+const Ranking = () => {
+  // 登録情報データを取得
+  const usersData = Registration_Data();
 
-  const page_D = () => 
-  {
-
-  };
+  // 米ポイントを基準に降順にソート
+  const sortedUsers = usersData.sort((a, b) => b.米ポイント - a.米ポイント);
 
   // メインコンテナに渡すデータを定義
-  const layoutData = [
-    {
-      sideButtonPosition: 'left',
-      buttonText: 'ランキング画面ボタン1',
-      onClick: page_A,
-      text: 'ランキング画面に表示させたい文1',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'left',
-      buttonText: 'ランキング画面ボタン2',
-      onClick: page_B,
-      text: 'ランキング画面に表示させたい文2',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'right',
-      buttonText: 'ランキング画面ボタン3',
-      onClick: page_C,
-      text: 'ランキング画面に表示させたい文3',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'center',
-      buttonText: 'ランキング画面ボタン4',
-      onClick: page_D,
-      text: 'ランキング画面に表示させたい文4',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-  ];
+  const layoutData = sortedUsers.map((user, index) => (
+  {
+    text: `${user.ユーザーネーム}さん!  米ポイント: ${user.米ポイント}`, // ボタンテキストにユーザー名と米ポイント
+    onClick: () => console.log(`${user.ユーザーネーム}の詳細を見る`),
+    text: `ランキング順位: ${index + 1}の${user.ユーザーネーム}さん!  米ポイント: ${user.米ポイント}です!!`,
+    textSize: 5,
+    imageSrc: IMAGE1
+  }));
+
   return (
     <div>
-      <h1>ランキング画面です(仮配置)</h1>
-      
+      <h1>ランキング画面</h1>
+      <h2>米ポイントランキング</h2>
+
       {/* MainContainerコンポーネントを使って、layoutDataを渡す */}
       <MainContainer layoutData={layoutData} />
     </div>
