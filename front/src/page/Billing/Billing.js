@@ -4,15 +4,22 @@ import IMAGE1 from './images/MATSUOKA.jpg'; // 画像のパス
 const Billing = () => {
   const [ricePoints, setRicePoints] = useState(''); // お米ポイントの入力値を管理する
 
-  const handleRicePointsChange = (e) => {
-    setRicePoints(e.target.value); // 入力値を更新
+  const handleRicePointsChange = (e) => 
+  {
+    const value = e.target.value;
+    // マイナス値を防ぐ
+    if (value === '' || (Number(value) >= 0 && /^[0-9]*$/.test(value)))setRicePoints(value);
   };
 
-  const handlePurchase = () => {
-    if (ricePoints) {
+  const handlePurchase = () => 
+  {
+    if (ricePoints) 
+    {
       console.log(`お米ポイントを ${ricePoints} 購入します！`);
       alert(`お米ポイントを ${ricePoints} 購入しました！`);
-    } else {
+    } 
+    else 
+    {
       alert('お米ポイントの量を入力してください！');
     }
   };
@@ -36,6 +43,7 @@ const Billing = () => {
             width: '200px',
             marginBottom: '10px',
           }}
+          min="0" // マイナス値を入力できなくする
         />
         <br />
         <button
