@@ -1,3 +1,7 @@
 npm install serverless-http
 でserverless-httpを入れるか
 それかexpress単体でやるか
+
+新しくファイル
+用意しとくべきもの
+APIuselogin

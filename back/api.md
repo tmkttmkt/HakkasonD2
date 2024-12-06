@@ -16,5 +16,15 @@
 - body={}
 - res={success:bool}
 
-APIを３つ
-いしゅーのやつ書く
+# point
+/point
+##
+- method: GET
+- pass: /get-okome
+- body: { userId: str }
+- res: { success: bool, okome: int }
+##
+- method: POST
+- pass: /update-okome
+- body: { userId: str, value: int }
+- res: { success: bool, okome: int }
