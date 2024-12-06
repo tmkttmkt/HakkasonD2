@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const getmatuoka=require("./matuoka.js")
+const getmatuokaq=require("./matuoka.js")
 const {supabase,generateUnusedId} =require("./supabase_wrapper.js")
 const table="conversation"
 
@@ -18,8 +18,7 @@ async function delconver(req, res){
 }
 router.delete(":id",delconver)
 
-//body={sendId:str,receiveId:str,data:str}
-//res={datas:[{str:time}]}
+
 async function postconver(req, res){
     const body = req.body;
     const id=await generateUnusedId(table)
@@ -34,8 +33,7 @@ async function postconver(req, res){
 }
 router.post("/",postconver)
 
-//body={sendId:str,receiveId:str}
-//res={datas:[{data:str,time:time}]}
+
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
     const { data, error } = await supabase.from(tabale)
@@ -82,15 +80,15 @@ async function getcreator(req, res){
 router.get("/creator/:id",getcreator)
 
 async function getmatuoka(req, res){
-    const { id } = req.params; 
-    const strings=getmatuoka(id);
+    const { num } = req.params; 
+    const strings=getmatuokaq(num);
     res.json({quotes:strings});
 }
-router.get("/matuoka",getmatuoka)
+router.get("/matuoka/:num",getmatuoka)
 
 async function get(req, res){
     const { id } = req.params; 
-    const {data,error}=await supabase.from(table).select("*").eq("id",id);
+    const {data,error}=await supabase.from(table).select("*").eq("id",id).single();
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();

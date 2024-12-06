@@ -82,6 +82,6 @@
 - res={ids:[str]}
 ## 
 - method:GET
-- pass:/matuoka/:id
+- pass:/matuoka/:um
 - body={}
 - res={quotes:[str]}
