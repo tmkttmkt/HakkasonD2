@@ -66,7 +66,8 @@ function Login({ setCurrentPage })
   const access = async(email, password) => {
     let flg=await getpass(email, password);
     console.log(flg)
-    if (flg) {
+    if (true)//取りあえず今だけ代わりでtrueを入れている――――――――――――――――――――――――――――――――――――――――――――ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー 
+    {
       OK_or_NO_draw("");
       setCurrentPage("profile"); // ログイン成功後、profileページに遷移
     } else {
