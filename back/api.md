@@ -41,7 +41,6 @@
 - method:GET
 - pass:/type
 - body={}
-- res={success:bool}
 - res={list[{id:int,role:str}]}
 # point
 /point
@@ -49,9 +48,40 @@
 - method: GET
 - pass: /get-okome
 - body: { userId: str }
-- res: { success: bool, okome: int }
+- res: { okome: int }
 ##
 - method: POST
 - pass: /update-okome
 - body: { userId: str, value: int }
-- res: { success: bool, okome: int }
+- res: { okome: int }
+# conversation
+## 
+- method:DELL
+- pass:/:id
+- body={}
+- res={success:bool}
+## 
+- method:POST
+- pass:/
+- body={sendId:str,receiveId:str,data:str}
+- res={id:str}
+## 
+- method:GET
+- pass:/one-on-one
+- body={id_a:str,id_b:str}
+- res={datas:[{sendId:str,receiveId:str,data:str,time:time}]}
+## 
+- method:GET
+- pass:/:id
+- body={}
+- res={data:str,time:time}
+## 
+- method:GET
+- pass:/creator/:id
+- body={}
+- res={ids:[str]}
+## 
+- method:GET
+- pass:/matuoka/:id
+- body={}
+- res={quotes:[str]}
