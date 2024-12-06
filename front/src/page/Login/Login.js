@@ -45,7 +45,7 @@ function Login({ setCurrentPage })
       // body:の所では、データーべ―スにデータ送信しようとしているデータをデータベースに送信が可能なJSON文字列という形式に変更している。
       body: JSON.stringify({id:mail,pass:password})// 送信するデータをJSON文字列に変換
     }//postdataでHTTPリクエストを送るためのデータを管理している。
-    let url=process.env.REACT_APP_BACKEND_URL+"/login";
+    let url=process.env.REACT_APP_BACKEND_URL+"/login";//
     console.log(url,postdata);
     //ーーーーーーーーーーーーー
     await fetch(url,postdata)//データベース送信、ボール投げる
