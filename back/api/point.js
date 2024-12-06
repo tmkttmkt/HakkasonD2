@@ -31,10 +31,10 @@ router.get('/get-okome',getOkome);
 
 // 米ポイントを増減 API
 async function updateOkome(req, res){
-    const { userId, action } = req.body;
+    const { userId, value } = req.body;
 
-    if (!userId || !action) {
-        return res.status(400).json({ error: 'userIdとactionが必要ですよ' });
+    if (!userId || typeof value !== 'number') {
+        return res.status(400).json({ error: 'userIdとvalueが必要ですよ' });
     }
 
     const { data, error } = await supabase
@@ -48,16 +48,7 @@ async function updateOkome(req, res){
         return res.status(500).send();
     }
 
-    let newOkome =data.okome;
-    
-    // actionがaddなら+1,subtractなら-1
-    if (action === 'add') {
-        newOkome += 1;
-    } else if (action === 'subtract') {
-        newOkome -= 1;
-    } else {
-        return res.status(400).json({ error: '無効なアクションですよ'});
-    }
+    const newOkome = data.okome + value; //指定された値を増減
 
     // 新しい米ポイントをデータベースに保存
     const { updateError } = await supabase
@@ -65,7 +56,7 @@ async function updateOkome(req, res){
     .update({ okome: newOkome })
     .eq('user_id', userId);
 
-    if (updateError) {
+    if (error) {
         console.error('Error updating data:', updateError);
         return res.status(500).send();
     }
