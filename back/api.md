@@ -43,6 +43,8 @@
 - body={}
 - res={success:bool}
 - res={list[{id:int,role:str}]}
+-
+-
 # point
 /point
 ##
@@ -55,3 +57,22 @@
 - pass: /update-okome
 - body: { userId: str, value: int }
 - res: { success: bool, okome: int }
+-
+-
+# recruitment
+/recruitment
+##
+- method:POST
+- pass:/start
+- body: { creator:str, produc:str, order:str, explanation:str }
+- res: { success:bool }
+##
+- method:GET
+- pass:/get
+- body: { creator:str|null }
+- res: { success:bool }
+##
+- method:POST
+- pass:/stop
+- body: { id:int }
+- res: { success:bool }
