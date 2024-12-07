@@ -20,23 +20,33 @@ const options =
   { id: 4, text: '経験豊富なメンバーを募集しています!' },
   { id: 5, text: 'その他の目的があります。' },
 ];
-async function matuokafunc(){
-  const postdata = {
+async function matuokafunc()
+{
+  const postdata = 
+  {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: {'Content-Type': 'application/json',},
   };
   const url = process.env.REACT_APP_BACKEND_URL + "/conversation"+"/matuoka"+"/5";
-  const response = await fetch(url, postdata);
-  if (!response.ok) {
-    const errorData = await response.json();
+  const response = await fetch(url, postdata);//const response=await fetch(データベースのURL,ポストデータ(送信するまでの設定定めるやつ)
+  if (!response.ok)//.okの結果として戻ってきたのがtrueだったら起動
+  {
+    const errorData = await response.json();//fetch関数に送られて帰ってきたデータ
     throw new Error(errorData.message || "アカウント作成に失敗しました");
   }
-  const data = await response.json();
+  const data = await response.json();//fetch関数に送られて帰ってきたデータ
   console.log(data);
-  return data.quotes
+  return data.quotes//
 }
+
+//バックとの通信プログラムの作り方
+//手順1-  postdataというバックに送る信号の設定をオブジェクトを作成
+//手順2-  const url = process.env.REACT_APP_BACKEND_URL + "/conversation"+"/matuoka"+"/5";などでデータベースのパス入った変数作成(送信先のURL)
+//手順3- 「帰ってきたデータの参照ができる変数=fetch(データベースのパス入った変数, データベースに送る信号の設定を入れた変数名);」
+//手順4- 「帰ってきたデータの参照ができる変数.○○」という感じにすることで帰ってきた信号を確かめることが可能。
+//※ ○○の部分はバックエンドプログラムをコマンドプロンプトでnpm startで起動させて、その時出てきた{○○:情報}でカッコの中にある○○のことを言っている。○○と入力すると{○○:A}のAがわかる。
+
+//a=await response.json();　帰ってくるデータが複数個あって 「.ok」や「.quotes」のデータとして帰ってきたデータを確認することが出来る。
 const ChatProgram = () => {
   const [selectedUser, setSelectedUser] = useState(users[0]); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
