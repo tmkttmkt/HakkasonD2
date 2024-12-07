@@ -1,58 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// ユーザーリストデータ
-//https://hycrcwksixagdnummgax.supabase.co
+// ユーザーリストデータ（例）
 const users = 
 [
-  { id: 1, name: "ユーザーA" },
-  { id: 2, name: "ユーザーB" },
-  { id: 3, name: "ユーザーC" },
-  { id: 4, name: "ユーザーD" },
-  { id: 5, name: "ユーザーE" },
+  { id: 1, name: 'User1' },
+  { id: 2, name: 'User2' },
+  { id: 3, name: 'User3' },
 ];
 
-// 選択肢データ
-const options = 
-[
-  { id: 1, text: '開発者を探しています!' },
-  { id: 2, text: '受託者を探しています!' },
-  { id: 3, text: '新しいプロジェクトに参加したい!' },
-  { id: 4, text: '経験豊富なメンバーを募集しています!' },
-  { id: 5, text: 'その他の目的があります。' },
-];
-async function matuokafunc()
-{
-  const postdata = 
-  {
+// 松岡修造の言葉を取得する関数
+async function matuokafunc() {
+  const postdata = {
     method: 'GET',
-    headers: {'Content-Type': 'application/json',},
+    headers: { 'Content-Type': 'application/json' },
   };
-  const url = process.env.REACT_APP_BACKEND_URL + "/conversation"+"/matuoka"+"/5";
-  const response = await fetch(url, postdata);//const response=await fetch(データベースのURL,ポストデータ(送信するまでの設定定めるやつ)
-  if (!response.ok)//.okの結果として戻ってきたのがtrueだったら起動
-  {
-    const errorData = await response.json();//fetch関数に送られて帰ってきたデータ
-    throw new Error(errorData.message || "アカウント作成に失敗しました");
+  const url = process.env.REACT_APP_BACKEND_URL + '/conversation/matuoka/5';
+
+  try {
+    const response = await fetch(url, postdata);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'データの取得に失敗しました');
+    }
+    const data = await response.json();
+    return data.quotes || [];
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
   }
-  const data = await response.json();//fetch関数に送られて帰ってきたデータ
-  console.log(data);
-  return data.quotes//
 }
 
-//ーーーーーバックとの通信プログラムの作り方ーーーーー
-//手順1-  postdataというバックに送る信号の設定をオブジェクトを作成
-//手順2-  const url = process.env.REACT_APP_BACKEND_URL + "/conversation"+"/matuoka"+"/5";などでデータベースのパス入った変数作成(送信先のURL)
-//手順3- 「帰ってきたデータの参照ができる変数=fetch(データベースのパス入った変数, データベースに送る信号の設定を入れた変数名);」
-//手順4- 「帰ってきたデータの参照ができる変数.○○」という感じにすることで帰ってきた信号を確かめることが可能。
-//※ ○○の部分はバックエンドプログラムをコマンドプロンプトでnpm startで起動させて、その時出てきた{○○:情報}でカッコの中にある○○のことを言っている。○○と入力すると{○○:A}のAがわかる。
-//バックエンドプログラムの内容を辞書型のように読み込むということ
-
-//a=await response.json();　帰ってくるデータが複数個あって 「.ok」や「.quotes」のデータとして帰ってきたデータを確認することが出来る。
 const ChatProgram = () => {
   const [selectedUser, setSelectedUser] = useState(users[0]); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
   const [messages, setMessages] = useState({}); // ユーザーごとのメッセージ履歴を管理
   const [selectedOption, setSelectedOption] = useState(''); // 選択肢データ
+  const [words, setWords] = useState([]); // 松岡修造の言葉
+  const [error, setError] = useState(null); // エラーメッセージ
+
+  // 松岡修造の言葉をロード
+  useEffect(() => {
+    const loadWords = async () => 
+    {
+      try 
+      {
+        const quotes = await matuokafunc();//バックから選択肢の言葉をとってくる。
+        setWords(quotes);
+      } 
+      catch (err) 
+      {
+        setError(err.message);
+      }
+    };
+    loadWords();
+  }, [messages]);
 
   // ユーザー選択時の処理
   const handleUserClick = (user) => {
@@ -60,9 +61,10 @@ const ChatProgram = () => {
   };
 
   // 選択肢クリック時の処理
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
+  const handleOptionClick = (optionText) => {
+    setSelectedOption(optionText);
   };
+
   // メッセージ送信処理
   const handleSendMessage = () => {
     if (!selectedOption) {
@@ -116,6 +118,13 @@ const ChatProgram = () => {
 
       {/* 右側のチャットエリア */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* エラー表示 */}
+        {error && (
+          <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>
+            {error}
+          </div>
+        )}
+
         {/* チャット表示領域 */}
         <div
           style={{
@@ -149,19 +158,19 @@ const ChatProgram = () => {
 
         {/* 選択肢エリア */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-          {options.map((option) => (
+          {words.map((option, index) => (
             <button
-              key={option.id}
-              onClick={() => handleOptionClick(option.text)}
+              key={index}
+              onClick={() => handleOptionClick(option)}
               style={{
                 padding: '8px',
                 cursor: 'pointer',
-                background: selectedOption === option.text ? '#d1c4e9' : '#f9f9f9',
+                background: selectedOption === option ? '#d1c4e9' : '#f9f9f9',
                 border: '1px solid #ccc',
                 borderRadius: '5px',
               }}
             >
-              {option.text}
+              {option}
             </button>
           ))}
         </div>
@@ -202,17 +211,9 @@ const ChatProgram = () => {
             送信
           </button>
         </div>
-        <h1>　　</h1>
       </div>
     </div>
   );
 };
 
 export default ChatProgram;
-
-
-
-//自分が会話したことのあるユーザーのIDを全て取ってくるフェチ
-//会話したことのあるユーザーとの会話履歴をとって切る時のフェチ
-//松岡修造の言葉を持ってくるフェチ
-//送信フェチ
