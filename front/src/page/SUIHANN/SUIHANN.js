@@ -28,9 +28,9 @@ const SUIHANN = () =>
   [
     {
       sideButtonPosition: 'left',
-      buttonText: 'すいはん画面ボタン1',
+      buttonText: '送信',
       onClick: page_A,
-      text: 'すいはん画面に表示させたい文1',
+      text: '送信テキスト1',
       textSize: 20,
       imageSrc: IMAGE1
     },

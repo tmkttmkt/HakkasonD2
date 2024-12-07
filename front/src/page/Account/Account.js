@@ -1,131 +1,133 @@
 import React, { useState } from 'react';
-import Side_button from '../../component/Main_container/Side_button/Side_button';
-import Data_account from './Data_account';
 
-function Account({ setCurrentPage,set_login_address }) 
-{
-  const [name, setName] = useState("");
-  const [mail, setMail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error_name, error_name_set] = useState("");
-  const [error_mail, error_mail_set] = useState("");
-  const [error_password, error_text_password] = useState("");
-  const [decide_address,set_decide_address]=useState(false);
+function Account({ setCurrentPage }) {
+  const [form, setForm] = useState({ name: "", mail: "", password: "" });
+  const [errors, setErrors] = useState({ name: "", mail: "", password: "" });
+  const [messages, setMessages] = useState([]); // 投稿されたメッセージを保存
+  const [currentUser, setCurrentUser] = useState("User A"); // 現在の投稿者を切り替える
+
+  // 入力変更時に状態を更新する関数
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   // 入力のバリデーションを行う関数
-  const validateForm = () => 
-  {
+  const validateForm = () => {
     let valid = true;
+    let newErrors = { name: "", mail: "", password: "" };
 
-    // 名前のバリデーション
-    if (name.length < 6) 
-    {
-      error_name_set("名前は6文字以上で入力してください");
+    if (form.name.length < 6) {
+      newErrors.name = "名前は6文字以上で入力してください";
       valid = false;
-    } 
-    else 
-    {
-      error_name_set("");
     }
 
-    // メールアドレスのバリデーション
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(mail)) 
-    {
-      error_mail_set("有効なメールアドレスを入力してください");
+    if (!emailRegex.test(form.mail)) {
+      newErrors.mail = "有効なメールアドレスを入力してください";
       valid = false;
-    } 
-    else 
-    {
-      error_mail_set("");
     }
 
-    // パスワードのバリデーション
-    if (password.length < 6) 
-    {
-      error_text_password("パスワードは6文字以上で入力してください");
+    if (form.password.length < 6) {
+      newErrors.password = "パスワードは6文字以上で入力してください";
       valid = false;
-    } 
-    else 
-    {
-      error_text_password("");
     }
+
+    setErrors(newErrors);
     return valid;
   };
 
-  // アカウント作成終了処理
-  const Make_Account_end = () => 
-  {
-    if (validateForm()) 
-    {
-      // データをData_accountに渡す
-      set_login_address(mail);//ログイン時のメールアドレスを保持
-      set_decide_address(true);
+  // バックエンドとの通信
+  const addpass = async () => {
+    const postdata = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: form.name, id: form.mail, pass: form.password }),
+    };
+
+    const url = process.env.REACT_APP_BACKEND_URL + "/account";
+
+    try {
+      const response = await fetch(url, postdata);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "アカウント作成に失敗しました");
+      }
+      const data = await response.json();
+      return data.success;
+    } catch (error) {
+      alert(error.message.includes("NetworkError")
+        ? "ネットワークエラーが発生しました。インターネット接続を確認してください。"
+        : `アカウント作成に失敗しました: ${error.message}`);
+      return false;
     }
   };
 
-  const Return_to_login_screen = () => {
-    setCurrentPage('login'); // ログイン画面に戻る
+  // メッセージを追加する関数
+  const addMessage = () => {
+    if (!form.name.trim()) return;
+    setMessages((prev) => [...prev, { user: currentUser, text: form.name }]);
+    setCurrentUser(currentUser === "User A" ? "User B" : "User A"); // ユーザーを切り替え
+    setForm((prev) => ({ ...prev, name: "" })); // 入力をクリア
   };
 
   return (
-    <div>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>アカウント設定</h1>
-      {/* 名前の入力 */}
-      <div>
-        <label>名前: </label>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
-        />
-        {error_name && <div style={{color: "red"}}>{error_name}</div>}
-      </div>
 
-      {/* メールアドレスの入力 */}
-      <div>
-        <label>メールアドレス: </label>
-        <input 
-          type="email" 
-          value={mail} 
-          onChange={(e) => setMail(e.target.value)} 
-        />
-        {error_mail && <div style={{color: "red"}}>{error_mail}</div>}
-      </div>
-
-      {/* パスワードの入力 */}
-      <div>
-        <label>パスワード: </label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-        />
-        {error_password && <div style={{color: "red"}}>{error_password}</div>}
-      </div>
-
-      {/* 登録ボタン */}
-      <Side_button 
-        Button_text="上記の内容でアカウント登録" 
-        button_position="center" 
-        onClick={Make_Account_end} 
-      />
-
-      {/* ログイン画面に戻るリンク */}
-      <a 
-        href="#" 
-        onClick={Return_to_login_screen} 
+      {/* チャット枠 */}
+      <div
         style={{
-          display: 'block', 
-          textAlign: 'center', 
-          margin: '0 auto', 
-          width: 'fit-content'
+          margin: '20px 0',
+          padding: '10px',
+          width: '100%',
+          maxWidth: '400px',
+          height: '300px',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          overflowY: 'scroll',
+          background: '#f9f9f9',
         }}
       >
-        ログイン画面に戻りたい場合はここをクリック
-      </a>
+        {messages.length === 0 ? (
+          <p style={{ color: '#888' }}>まだメッセージがありません。</p>
+        ) : (
+          messages.map((message, index) => (
+            <div
+              key={index}
+              style={{
+                padding: '10px',
+                margin: '10px 0',
+                borderRadius: '5px',
+                background: currentUser === "User A" ? '#e0f7fa' : '#fff3e0',
+              }}
+            >
+              <strong>{message.user}</strong>
+              <p>{message.text}</p>
+            </div>
+          ))
+        )}
+      </div>
 
-      {/* Data_accountを呼び出し、formDataを渡す */}
-      <Data_account formData={{ name, mail, password }}decide_address={decide_address}setCurrentPage={setCurrentPage} />
+      {/* 名前の入力 */}
+      <div>
+        <label>セリフを入力してください: </label>
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+        />
+        <button onClick={addMessage} style={{ marginLeft: '10px' }}>
+          投稿
+        </button>
+      </div>
+
+      {/* バリデーションエラーの表示 */}
+      {errors.name && <div style={{ color: "red" }}>{errors.name}</div>}
+
+      {/* 登録ボタン */}
+      <button onClick={validateForm}>登録</button>
     </div>
   );
 }
