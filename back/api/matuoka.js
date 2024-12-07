@@ -15,8 +15,8 @@ function getquotes(num){
         let line='あchar,ミスったかな～';
         while(set>0){
             set-=data[i].random_value;
-            i+=1;
             line=data[i].line;
+            i+=1;
         }
         result.push(line);
     }
