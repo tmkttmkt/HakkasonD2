@@ -6,6 +6,7 @@ const {
   DynamoDBClient,
   waitUntilTableExists,
   PutItemCommand,
+  RestoreTableFromBackupCommand,
 } =require("@aws-sdk/client-dynamodb");
 const {
   BatchWriteCommand,
@@ -18,7 +19,7 @@ const {
   paginateScan,
 } = require("@aws-sdk/lib-dynamodb");
 
-const dynamodbClient = new DynamoDBClient({
+const dynamodbclient = new DynamoDBClient({
   region: process.env.AWS_REGION, // 環境変数からリージョンを取得
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID, // 環境変数からアクセスキーを取得
@@ -27,26 +28,89 @@ const dynamodbClient = new DynamoDBClient({
   },
   endpoint: undefined
 });
-const docClient = DynamoDBDocumentClient.from(dynamodbClient);
-/*const testdo = async (event)=> {
+const dynamodblite = DynamoDBDocumentClient.from(dynamodbclient);
+async function getwrapper(table,item) {
+  const params = {
+    TableName: table,
+    Key: item,
+  };
+  const command = new GetCommand(params);
+  try {
+    const result=await dynamodblite.send(command);
+    return{ data:result.item,error:null};
+  } catch (err) {
+    return{ data:null,error:err};
+  }
+}
+async function putwrapper(table,item) {
+  const params= {
+      TableName: table,
+      Item: item,
+  };
+  const command = new PutCommand(params);
+  try {
+      await dynamodblite.send(command);
+      return{ data:null,error:null};
+  } catch (err) {
+      return{ data:null,error:err};
+  }
+}
+async function delwrapper(table,item) {
+  const params = {
+    TableName: table,
+    Key: item
+  };
+  const command = new DeleteCommand(params);
+  try {
+    const data = await dynamodblite.send(command);
+    return{ data:data,error:null};
+  } catch (err) {
+    return{ data:null,error:err};
+  }
+}
+async function scanwrapper(table) {
+  try{
+    const paginator = paginateScan({ client: dynamodblite }, { TableName: table });
+    const items = [];
+    for await (const page of paginator) {
+      if (page.Items) {
+        items.push(...page.Items);
+      }
+    }
+    return { data: items, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+}
+
+
+module.exports={
+  dynamodbclient,
+  dynamodblite,
+  getwrapper,
+  putwrapper,
+  delwrapper,
+  scanwrapper,
+}
+/*
+const testdo = async (event)=> {
   const params= {
       TableName: 'test222222',
       Item: {
-          user_id: { S: '3' },
-          name: { S: 'Jo2323dd' },
-          age: { N: '203' },
+          user_id:'32222wdd22',
+          name: 'Jo2323dd',
+          age: 203,
       },
   };
-  const command = new PutItemCommand(params);
+  const command = new PutCommand(params);
   try {
-      await dynamodbClient.send(command);
+      await dynamodblite.send(command);
       console.log("\nrrr-put\n");
   } catch (err) {
     console.log(err)
   }
 };
-
-testdo();*/
+testdo();// */
 /*
 const testget = async (event)=> {
   const params = {
@@ -55,7 +119,7 @@ const testget = async (event)=> {
   };
   const command = new GetCommand(params);
   try {
-      const a=await docClient.send(command);
+      const a=await dynamodblite.send(command);
       console.log(a.Item);
   } catch (err) {
     console.log(err)
@@ -64,14 +128,14 @@ const testget = async (event)=> {
 testget();//*/
 /*
 const testgets = async (event)=> {
-  const paginator = paginateScan({ client: docClient }, { TableName: "test222222" });
+  const paginator = paginateScan({ client: dynamodblite }, { TableName: "test222222" });
   for await (const page of paginator) {
     console.log(page.Items);
     console.log("\nrrr-gets\n");
   }
 }
 testgets();//*/
-
+/*
 const testdel = async (event)=> {
   const params = {
     TableName: "test222222",
@@ -83,11 +147,10 @@ const testdel = async (event)=> {
   const command = new DeleteCommand(params);
 
   try {
-    const data = await docClient.send(command);
+    const data = await dynamodblite.send(command);
     console.log("Item deleted:", data);
   } catch (err) {
     console.error("Error deleting item:", err);
   }
 }
 testdel();//*/
-module.exports=dynamodbClient

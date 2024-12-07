@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const {supabase,generateUnusedId} =require("./supabase_wrapper.js");
-const dynamodb=require("./aws_wrapper.js");
+const {dynamodbclient,dynamodblite,getwrapper,scanwrapper,putwrapper }=require("./aws_wrapper.js");
 const table="login"
 
 async function postlogin(req, res){
     const { id, pass } = req.body;
     
-    const {data,error} = await supabase.from(table).select("*").eq("user_id",id).single();
+    const {data,error} = await getwrapper(table,{user_id:id});
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
@@ -19,7 +19,7 @@ async function postlogin(req, res){
 router.post('/',postlogin);
 
 async function getlogin(req, res){
-    const {data,error} = await supabase.from(table).select("*");
+    const {data,error} = await scanwrapper(table);
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
@@ -33,18 +33,20 @@ router.get('/',getlogin);
 
 async function postsignup(req, res){
     const { id, pass,name } = req.body; 
-
-    const {data,error} = await supabase.from(table).insert([{uesr_id: id,uesr_name:name,password: pass}]);
+    const {data,error} = await putwrapper(table,{user_id: id,user_name:name,password: pass});
     if (error) {
       console.error('Error inserting data:', error);
-      res.status(500).send();
+      //res.status(500).send();
     }
     else{
-        res.json({ success:data.lenght!=0 });
+        //res.json({ success:data.lenght!=0 });
     }
 }
 router.post('/signup',postsignup);
-
+postsignup({body:{id:"tmkt",pass:"password",name:"俺だよ俺"}},null)
+postsignup({body:{id:"kroud",pass:"01234",name:"道未知の道"}},null)
+postsignup({body:{id:"maxmam",pass:"maxisnotmin",name:"猿田彦"}},null)
+postsignup({body:{id:"taketake",pass:"taketake",name:"たけたけ"}},null)
 async function postloginmail(req, res){
 }
 router.post('/email',postloginmail);
