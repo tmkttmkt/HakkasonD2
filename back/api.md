@@ -55,6 +55,7 @@
 - body: { userId: str, value: int }
 - res: { okome: int }
 # conversation
+/conversation
 ## 
 - method:DELL
 - pass:/:id
@@ -82,7 +83,7 @@
 - res={ids:[str]}
 ## 
 - method:GET
-- pass:/matuoka/:um
+- pass:/matuoka/:num
 - body={}
 - res={quotes:[str]}
 # profileRoutes

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {supabase,generateUnusedId} =require("./supabase_wrapper.js")
+const {supabase,generateUnusedId} =require("./supabase_wrapper.js");
+const dynamodb=require("./aws_wrapper.js");
 const table="login"
 
 async function postlogin(req, res){
