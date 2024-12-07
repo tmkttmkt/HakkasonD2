@@ -82,14 +82,7 @@ router.get("/creator/:id",getcreator)
 async function getmatuoka(req, res){
     const { num } = req.params; 
     const strings=getmatuokaq(num);
-    if(strings.length!=0){
-      res.json({quotes:strings});
-    }
-    else{
-      console.error('多分数のオーバー', error);
-      res.status(500).send();
-
-    }
+    res.json({quotes:strings});
 }
 router.get("/matuoka/:num",getmatuoka)
 
