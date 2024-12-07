@@ -85,3 +85,10 @@
 - pass:/matuoka/:um
 - body={}
 - res={quotes:[str]}
+# profileRoutes
+/profileRoutes
+##
+- method:GET
+- pass:/:id
+- body={user_id:text,okome:int2,role:text,exposition:text,billing:text}
+- res={req, res}
