@@ -20,7 +20,23 @@ const options =
   { id: 4, text: '経験豊富なメンバーを募集しています!' },
   { id: 5, text: 'その他の目的があります。' },
 ];
-
+async function matuokafunc(){
+  const postdata = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const url = process.env.REACT_APP_BACKEND_URL + "/conversation"+"/matuoka"+"/5";
+  const response = await fetch(url, postdata);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "アカウント作成に失敗しました");
+  }
+  const data = await response.json();
+  console.log(data);
+  return data.quotes
+}
 const ChatProgram = () => {
   const [selectedUser, setSelectedUser] = useState(users[0]); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
@@ -36,7 +52,6 @@ const ChatProgram = () => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
   };
-
   // メッセージ送信処理
   const handleSendMessage = () => {
     if (!selectedOption) {
