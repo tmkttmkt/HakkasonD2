@@ -37,6 +37,25 @@ const ChatProgram = () => {
   const [selectedOption, setSelectedOption] = useState(''); // 選択肢データ
   const [words, setWords] = useState([]); // 松岡修造の言葉
   const [error, setError] = useState(null); // エラーメッセージ
+  
+  //最初に会話履歴をロード
+  useEffect(() => 
+    {
+      const loadWords = async () => 
+      {
+        try 
+        {
+          const quotes = await matuokafunc();//バックから選択肢の言葉をとってくる。
+          setWords(quotes);
+        } 
+        catch (err) 
+        {
+          setError(err.message);
+        }
+      };
+      loadWords();
+    }, []);
+  
 
   // 松岡修造の言葉をロード
   useEffect(() => {
@@ -54,6 +73,8 @@ const ChatProgram = () => {
     };
     loadWords();
   }, [messages]);
+
+
 
   // ユーザー選択時の処理
   const handleUserClick = (user) => {
