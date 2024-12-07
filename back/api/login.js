@@ -39,7 +39,7 @@ async function postsignup(req, res){
       res.status(500).send();
     }
     else{
-        res.json({ success:data });
+        res.json({ success:data.lenght!=0 });
     }
 }
 router.post('/signup',postsignup);

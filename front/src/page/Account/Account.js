@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import Side_button from '../../component/Main_container/Side_button/Side_button';
 
-function Account({ setCurrentPage }) {
+function Account({ setCurrentPage }) 
+{
   const [form, setForm] = useState({ name: "", mail: "", password: "" });
   const [errors, setErrors] = useState({ name: "", mail: "", password: "" });
-  const [messages, setMessages] = useState([]); // 投稿されたメッセージを保存
-  const [currentUser, setCurrentUser] = useState("User A"); // 現在の投稿者を切り替える
 
   // 入力変更時に状態を更新する関数
   const handleChange = (e) => {
@@ -17,17 +17,22 @@ function Account({ setCurrentPage }) {
     let valid = true;
     let newErrors = { name: "", mail: "", password: "" };
 
-    if (form.name.length < 6) {
+    // 名前のバリデーション
+    if (form.name.length < 6) 
+    {
       newErrors.name = "名前は6文字以上で入力してください";
       valid = false;
     }
 
+    // メールアドレスのバリデーション
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(form.mail)) {
+    if (!emailRegex.test(form.mail)) 
+    {
       newErrors.mail = "有効なメールアドレスを入力してください";
       valid = false;
     }
 
+    // パスワードのバリデーション
     if (form.password.length < 6) {
       newErrors.password = "パスワードは6文字以上で入力してください";
       valid = false;
@@ -41,11 +46,14 @@ function Account({ setCurrentPage }) {
   const addpass = async () => {
     const postdata = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ user: form.name, id: form.mail, pass: form.password }),
     };
 
     const url = process.env.REACT_APP_BACKEND_URL + "/account";
+    console.log(url, postdata);
 
     try {
       const response = await fetch(url, postdata);
@@ -54,80 +62,103 @@ function Account({ setCurrentPage }) {
         throw new Error(errorData.message || "アカウント作成に失敗しました");
       }
       const data = await response.json();
+      console.log(data);
       return data.success;
     } catch (error) {
-      alert(error.message.includes("NetworkError")
-        ? "ネットワークエラーが発生しました。インターネット接続を確認してください。"
-        : `アカウント作成に失敗しました: ${error.message}`);
+      console.error("エラー:", error);
+      alert(
+        error.message.includes("NetworkError")
+          ? "ネットワークエラーが発生しました。インターネット接続を確認してください。"
+          : `アカウント作成に失敗しました: ${error.message}`
+      );
       return false;
     }
   };
 
-  // メッセージを追加する関数
-  const addMessage = () => {
-    if (!form.name.trim()) return;
-    setMessages((prev) => [...prev, { user: currentUser, text: form.name }]);
-    setCurrentUser(currentUser === "User A" ? "User B" : "User A"); // ユーザーを切り替え
-    setForm((prev) => ({ ...prev, name: "" })); // 入力をクリア
+  // アカウント作成処理
+  const Make_Account_end = async () => {
+    if (validateForm()) {
+      try {
+        const success = await addpass();
+        if (success) {
+          alert("アカウント作成に成功しました！");
+          setForm({ name: "", mail: "", password: "" });
+          setCurrentPage('profile');
+        } else {
+          alert("アカウント作成に失敗しました");
+        }
+      } catch (error) {
+        console.error("アカウント作成中にエラー:", error);
+        alert("予期しないエラーが発生しました。もう一度お試しください。");
+      }
+    }
+  };
+
+  // ログイン画面に戻る
+  const Return_to_login_screen = () => {
+    setCurrentPage('login');
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+    <div>
       <h1>アカウント設定</h1>
-
-      {/* チャット枠 */}
-      <div
-        style={{
-          margin: '20px 0',
-          padding: '10px',
-          width: '100%',
-          maxWidth: '400px',
-          height: '300px',
-          border: '1px solid #ccc',
-          borderRadius: '5px',
-          overflowY: 'scroll',
-          background: '#f9f9f9',
-        }}
-      >
-        {messages.length === 0 ? (
-          <p style={{ color: '#888' }}>まだメッセージがありません。</p>
-        ) : (
-          messages.map((message, index) => (
-            <div
-              key={index}
-              style={{
-                padding: '10px',
-                margin: '10px 0',
-                borderRadius: '5px',
-                background: currentUser === "User A" ? '#e0f7fa' : '#fff3e0',
-              }}
-            >
-              <strong>{message.user}</strong>
-              <p>{message.text}</p>
-            </div>
-          ))
-        )}
-      </div>
-
+      
       {/* 名前の入力 */}
       <div>
-        <label>セリフを入力してください: </label>
+        <label>名前: </label>
         <input
           type="text"
           name="name"
           value={form.name}
           onChange={handleChange}
         />
-        <button onClick={addMessage} style={{ marginLeft: '10px' }}>
-          投稿
-        </button>
+        {errors.name && <div style={{ color: "red" }}>{errors.name}</div>}
       </div>
 
-      {/* バリデーションエラーの表示 */}
-      {errors.name && <div style={{ color: "red" }}>{errors.name}</div>}
+      {/* メールアドレスの入力 */}
+      <div>
+        <label>メールアドレス: </label>
+        <input
+          type="email"
+          name="mail"
+          value={form.mail}
+          onChange={handleChange}
+        />
+        {errors.mail && <div style={{ color: "red" }}>{errors.mail}</div>}
+      </div>
+
+      {/* パスワードの入力 */}
+      <div>
+        <label>パスワード: </label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+        />
+        {errors.password && <div style={{ color: "red" }}>{errors.password}</div>}
+      </div>
 
       {/* 登録ボタン */}
-      <button onClick={validateForm}>登録</button>
+      <Side_button
+        Button_text="上記の内容でアカウント登録"
+        button_position="center"
+        onClick={Make_Account_end}
+      />
+
+      {/* ログイン画面に戻るリンク */}
+      <a
+        href="#"
+        onClick={Return_to_login_screen}
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          margin: '0 auto',
+          width: 'fit-content',
+        }}
+      >
+        ログイン画面に戻りたい場合はここをクリック
+      </a>
     </div>
   );
 }

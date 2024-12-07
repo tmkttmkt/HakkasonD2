@@ -1,5 +1,5 @@
 const fs = require('fs');
-const jsondata = fs.readFileSync('matuoka.json', 'utf8');
+const jsondata = fs.readFileSync('api/matuoka.json', 'utf8');
 const parsedData = JSON.parse(jsondata);
 
 function getRandomInt(min, max) {

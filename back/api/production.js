@@ -29,7 +29,7 @@ async function postdata(req, res){
   if (!file) {
     return res.status(400).json({ error: 'No file uploaded' });
   } 
-  const id=await generateUnusedId(produc)
+  const id=await generateUnusedId(table)
   const {data,error}=await supabase.from(table).insert([{id: id,creator:creator,type:type,url:file.path}]);
   if (error) {
     console.error('Error inserting data:', error);
@@ -61,6 +61,11 @@ async function delldata(req, res){
     const culudinary_id=getPublicIdFromUrl(data.url);
     try {
       const result = await cloudinary.uploader.destroy(culudinary_id);
+      const { data, error } = await supabase.from(table).delete().eq('id', id); 
+      if (error) {
+        console.error('Error inserting data:', error);
+        res.status(500).send();
+      }
       if (result.result === 'ok') {
         console.log('File deleted successfully');
         res.json({success:true})
