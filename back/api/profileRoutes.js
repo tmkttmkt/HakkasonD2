@@ -1,18 +1,15 @@
 process.noDeprecation = true;
 const express = require("express");
-const {supabase,generateUnusedId}=require("./supabase_wrapper.js")
+const {supabase,generateUnusedId}=require("./supabase_wrapper.js");
+const { getwrapper, putwrapper,scanwrapper } = require('./aws_wrapper.js');
 // ルーターを作成
 const router = express.Router();
-
+const table="profiles";
 // プロフィール取得
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .single();
+    const { data, error } = await getwrapper(table,{user_id:id});
 
     if (error) throw error;
     res.json(data);
@@ -25,12 +22,13 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { name, email, bio } = req.body;
-
+  const { data1, error } = await getwrapper(table,{user_id:id});
+  if (error){
+    res.status(500).json({ error: error.message });
+  }
   try {
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ name, email, bio })
-      .eq("id", id);
+    data1.user_name=name;
+    const { data, error } = await putwrapper(table,data1)
 
     if (error) throw error;
     res.json(data);

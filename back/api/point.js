@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const {supabase,generateUnusedId} = require('./supabase_wrapper.js');
+const { getwrapper, putwrapper,scanwrapper } = require('./aws_wrapper.js');
 
 // テーブル名
-const table = 'personal';
+const table = 'login';
 
 // 今の米ポイントを取得 API
 async function getOkome(req, res){
@@ -12,13 +13,7 @@ async function getOkome(req, res){
     if (!userId) {
         return res.status(400).json({ error: 'userIdが必要ですよ'});
     }
-
-    // personalからokomeを選択user_idを取得
-    const { data, error } = await supabase
-    .from(table)
-    .select('okome')
-    .eq('user_id',userId)
-    .single();
+    const {data,error} = await getwrapper(table,{user_id:userId});
 
     if (error) {
         console.error('Error fetching data:', error);
@@ -37,11 +32,7 @@ async function updateOkome(req, res){
         return res.status(400).json({ error: 'userIdとvalueが必要ですよ' });
     }
 
-    const { data, error } = await supabase
-    .from(table)
-    .select('okome')
-    .eq('user_id', userId)
-    .single();
+    const { data, error } = await getwrapper(table,{user_id:userId});
 
     if (error) {
         console.error('Error fetching data:', error);
@@ -49,13 +40,10 @@ async function updateOkome(req, res){
     }
 
     const newOkome = data.okome + value; //指定された値を増減
+    data.okome=newOkome;
 
     // 新しい米ポイントをデータベースに保存
-    const { updateError } = await supabase
-    .from(table)
-    .update({ okome: newOkome })
-    .eq('user_id', userId);
-
+    const { updateError } = await putwrapper(table,data);
     if (error) {
         console.error('Error updating data:', updateError);
         return res.status(500).send();

@@ -83,7 +83,6 @@ async function scanwrapper(table) {
   }
 }
 
-
 module.exports={
   dynamodbclient,
   dynamodblite,

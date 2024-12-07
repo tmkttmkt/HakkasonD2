@@ -33,7 +33,11 @@ router.get('/',getlogin);
 
 async function postsignup(req, res){
     const { id, pass,name } = req.body; 
-    const {data,error} = await putwrapper(table,{user_id: id,user_name:name,password: pass});
+    const {data1,error1} = await scanwrapper(table);
+    if(data1.map((item)=>{item.user_id}).includes(data)){
+      return res.status(409).json({ error: 'そのuser_idは既に使用されています'});
+    }
+    const {data,error} = await putwrapper(table,{user_id: id,user_name:name,password: pass,okome:0,exposition:"",billing:""});
     if (error) {
       console.error('Error inserting data:', error);
       //res.status(500).send();

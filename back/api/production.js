@@ -14,7 +14,7 @@ async function getall(req, res){
     res.status(500).send();
   }
   else{
-    res.json({ids:objects.map(obj => obj.id)})
+    res.json({ids:data.map(obj => obj.id)})
   }
   
 }

@@ -91,5 +91,10 @@
 ##
 - method:GET
 - pass:/:id
-- body={user_id:text,okome:int2,role:text,exposition:text,billing:text}
+- body={}
+- res={user_id:text,okome:int2,role:text,exposition:text,billing:text}
+##
+- method:POST
+- pass:/:id
+- body={ name:str, email, bio:str}
 - res={req, res}
