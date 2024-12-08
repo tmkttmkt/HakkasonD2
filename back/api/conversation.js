@@ -24,7 +24,7 @@ router.delete(":id",delconver)
 async function postconver(req, res){
     const body = req.body;
     const id=await generateUnusedId(table)
-    const {data,error} = await putwrapper(table,[{user_id_send:body.sendId,user_id_received:body.receiveIdname,id:id,data: body.data}]);
+    const {data,error} = await putwrapper(table,{user_id_send:body.sendId,user_id_received:body.receiveIdname,id:id,data: body.data});
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
