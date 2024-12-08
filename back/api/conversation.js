@@ -61,18 +61,21 @@ async function getcreator(req, res){
         res.status(500).send();
     }
     else{
-        res.json({id:data.lenght!=0})
+        console.log(data)
         const otherUserIds = data.map(row => {
-            // name が uesr_id_a に一致する場合は uesr_id_b を取得
-            if (row.uesr_id_a === id) {
-              return row.uesr_id_b;
+            // name が user_id_a に一致する場合は user_id_b を取得
+            if (row.user_id_send === id) {
+              console.log("send");
+              return row.user_id_send;
             }
-            // name が uesr_id_b に一致する場合は uesr_id_a を取得
-            if (row.uesr_id_b === id) {
-              return row.uesr_id_a;
+            // name が user_id_b に一致する場合は user_id_a を取得
+            if (row.user_id_received === id) {
+              console.log("received");
+              return row.user_id_send;
             }
             return null; // 一致しない場合は null
         }).filter(id => id !== null); // 無効なエントリを除外
+        console.log(otherUserIds)
         const uniqueOtherUserIds = [...new Set(otherUserIds)];
         res.json({ids:uniqueOtherUserIds})
     }
