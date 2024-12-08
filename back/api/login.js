@@ -13,7 +13,7 @@ async function postlogin(req, res){
     }
     else{
       if(data.lenght!=0){
-        res.json({ success: data[0].password==pass });
+        res.json({ success: data.password==pass });
       }
       res.json({ success: false });
     }
