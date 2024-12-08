@@ -56,11 +56,6 @@ router.post('/signup',postsignup);
 //postsignup({body:{id:"kroud",pass:"01234",name:"道未知の道"}},null)
 //postsignup({body:{id:"maxmam",pass:"maxisnotmin",name:"猿田彦"}},null)
 //postsignup({body:{id:"taketake",pass:"taketake",name:"たけたけ"}},null)
-
-async function name() {
-  const data=await scanwrapper(table);
-  console.log(data)
-}name()
 async function postloginmail(req, res){
 }
 router.post('/email',postloginmail);
