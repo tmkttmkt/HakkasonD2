@@ -47,7 +47,7 @@ function Header({
       
       {/* ログインアドレスを表示 */}
       <h1 className="message_to_you">
-        {"現在メールアドレス「"}{displayedName}{"」でログイン中です！"}
+        {"現在ユーザーID「"}{displayedName}{"」でログイン中です！"}
       </h1>
       
       {/* ログアウトボタン */}

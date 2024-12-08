@@ -117,7 +117,7 @@ function Account({ setCurrentPage })
 
       {/* メールアドレスの入力 */}
       <div>
-        <label>メールアドレス: </label>
+        <label>ユーザーID: </label>
         <input
           type="email"
           name="mail"
