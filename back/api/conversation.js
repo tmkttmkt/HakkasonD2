@@ -44,7 +44,7 @@ async function gettwo(req, res){
         res.status(500).send();
     }
     else{
-        res.json({sendId:data.user_id_send,receiveId:data.user_id_received,dtat:dtat.data,time:data.time});
+        res.json({sendId:data.user_id_send,receiveId:data.user_id_received,dtat:data.data,time:data.time});
     }
 }
 router.get("/one-on-one",gettwo)
