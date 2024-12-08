@@ -19,7 +19,7 @@
 /production
 ##
 - method:GET
-- pass:/:id
+- pass:/
 - body={}
 - res={url:str,creator:str,type:int}
 ##
@@ -27,10 +27,10 @@
 - pass:/creator/:id
 - body={}
 - res={ids:[int]}
-## FormData
+##
 - method:POST
 - pass:/
-- body={file:filedata,type:int,creator:str}
+- body={url:str,type:int,creator:str}
 - res={id:str}
 ## 
 - method:DELL
