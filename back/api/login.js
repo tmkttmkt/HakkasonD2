@@ -12,7 +12,10 @@ async function postlogin(req, res){
       res.status(500).send();
     }
     else{
-      res.json({ success: data[0].password==pass });
+      if(data.lenght!=0){
+        res.json({ success: data[0].password==pass });
+      }
+      res.json({ success: false });
     }
 }
 router.post('/',postlogin);
