@@ -68,14 +68,22 @@ async function delwrapper(table,item) {
     return{ data:null,error:err};
   }
 }
-async function scanwrapper(table,item) {
+async function scanwrapper(table,item={ExpressionAttributeValues:undefined,ExpressionAttributeValues:undefined,filter:undefined}) {
   try{
-    const parms={
+    let parms;
+    if(item){
+    parms={
        TableName: table, 
        FilterExpression:item.filter,
        ExpressionAttributeValues: item.ExpressionAttributeValues,
        ProjectionExpression:item.ExpressionAttributeValues,
       }
+    }
+    else{
+      parms={
+         TableName: table, 
+        }
+    }
     const paginator = paginateScan({ client: dynamodblite }, parms);
     const items = [];
     for await (const page of paginator) {

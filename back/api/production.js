@@ -38,7 +38,7 @@ async function postdata(req, res){
     res.json({id:id})
   }
 }
-router.post('/',culudinary.single("file"),postdata);
+router.post('/',postdata);
 
 
 async function delldata(req, res){

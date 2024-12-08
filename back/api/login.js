@@ -34,23 +34,33 @@ router.get('/',getlogin);
 async function postsignup(req, res){
     const { id, pass,name } = req.body; 
     const {data1,error1} = await scanwrapper(table);
-    if(data1.map((item)=>{item.user_id}).includes(data)){
-      return res.status(409).json({ error: 'そのuser_idは既に使用されています'});
-    }
-    const {data,error} = await putwrapper(table,{user_id: id,user_name:name,password: pass,okome:0,exposition:"",billing:""});
-    if (error) {
-      console.error('Error inserting data:', error);
-      //res.status(500).send();
+    if(data1){
+      if(data1.map((item)=>{item.user_id}).includes(data)){
+        return res.status(409).json({ error: 'そのuser_idは既に使用されています'});
+      }
+      const {data,error} = await putwrapper(table,{user_id: id,user_name:name,password: pass,okome:0,exposition:"",billing:""});
+      if (error) {
+        console.error('Error inserting data:', error);
+        res.status(500).send();
+      }
+      else{
+          res.json({ success:data.lenght!=0 });
+      }
     }
     else{
-        //res.json({ success:data.lenght!=0 });
+      return res.status(500).send();
     }
 }
 router.post('/signup',postsignup);
-postsignup({body:{id:"tmkt",pass:"password",name:"俺だよ俺"}},null)
-postsignup({body:{id:"kroud",pass:"01234",name:"道未知の道"}},null)
-postsignup({body:{id:"maxmam",pass:"maxisnotmin",name:"猿田彦"}},null)
-postsignup({body:{id:"taketake",pass:"taketake",name:"たけたけ"}},null)
+//postsignup({body:{id:"tmkt",pass:"password",name:"俺だよ俺"}},null)
+//postsignup({body:{id:"kroud",pass:"01234",name:"道未知の道"}},null)
+//postsignup({body:{id:"maxmam",pass:"maxisnotmin",name:"猿田彦"}},null)
+//postsignup({body:{id:"taketake",pass:"taketake",name:"たけたけ"}},null)
+
+async function name() {
+  const data=await scanwrapper(table);
+  console.log(data)
+}name()
 async function postloginmail(req, res){
 }
 router.post('/email',postloginmail);
