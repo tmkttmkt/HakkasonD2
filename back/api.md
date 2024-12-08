@@ -19,23 +19,28 @@
 /production
 ##
 - method:GET
-- pass:/:id
+- pass:/
 - body={}
 - res={url:str,creator:str,type:int}
+##
+- method:PUT
+- pass:/
+- body={url:str}
+- res={success:bool}
 ##
 - method:GET
 - pass:/creator/:id
 - body={}
-- res={ids:[int]}
+- res={urls:[str]}
 ##
 - method:POST
 - pass:/
 - body={url:str,type:int,creator:str}
-- res={id:str}
+- res={}
 ## 
 - method:DELL
-- pass:/:id
-- body={}
+- pass:/
+- body={url:str}
 - res={success:bool}
 ##
 - method:GET
