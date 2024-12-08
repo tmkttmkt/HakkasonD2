@@ -19,22 +19,39 @@ async function getall(req, res){
   }
   
 }
-router.get('/creator/:id',getall);
-
-
-async function isused(req, res){
-  const { id } = req.body; 
-  const {data,error}=await scanwrapper(table);
+router.get('/all',getall);
+async function gett(req, res){
+  const { url } = req.body; 
+  const {data,error}=await getwrapper(table,{id:url});
   if (error) {
     console.error('Error inserting data:', error);
     res.status(500).send();
   }
   else{
-    res.json({urls:data.map(obj => obj.id)})
+    res.json(data);
   }
   
 }
-router.put('/creator/:id',isused);
+router.get('/',gett);
+
+
+async function isused(req, res){
+  const { id } = req.body; 
+  const {data1,error1} = await scanwrapper(table);
+  if(data1){
+    if(data1.map((item)=>{item.id}).includes(id)){
+      return res.json({success:false});
+    }
+    else{
+      res.json({success:true});
+    }
+  }
+  else{
+    return res.status(500).send();
+  }
+  
+}
+router.put('/',isused);
 
 
 async function postdata(req, res){
@@ -43,31 +60,29 @@ async function postdata(req, res){
   if (!url) {
     return res.status(400).json({ error: 'No file uploaded' });
   } 
-  const id=await generateUnusedId(table)
-  const {data,error}=await putwrapper(table,[{id: id,creator:creator,type:type,url:url}]);
+  const {data,error}=await putwrapper(table,[{id: url,creator:creator,type:type,url:url}]);
   if (error) {
     console.error('Error inserting data:', error);
     res.status(500).send();
   }
   else{
-    res.json({id:id})
+    res.json({});
   }
 }
 router.post('/',postdata);
 
 
 async function delldata(req, res){
-  const { id } = req.params; 
-      const { data, error } = await delwrapper(table,{id:id});
+  const { url } = req.params; 
+      const { data, error } = await delwrapper(table,{id:url});
       if (error) {
         console.error('Error inserting data:', error);
         res.status(500).send();
       }else {
-        console.log('Failed to delete file');
-        res.json({success:false})
+        res.json({success:true});
       }
 }
-router.delete('/:id',delldata);
+router.delete('/',delldata);
 
 
 async function gettype(req, res){

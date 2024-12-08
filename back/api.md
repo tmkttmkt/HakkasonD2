@@ -17,32 +17,37 @@
 - 
 # production
 /production
-##
+## 
 - method:GET
 - pass:/
+- body={url:str}
+- res={url:strcreator:str,type:int}
+## 
+- method:GET
+- pass:/all
 - body={}
-- res={url:str,creator:str,type:int}
-##
+- res={urls:[str]}
+## //
 - method:PUT
 - pass:/
 - body={url:str}
 - res={success:bool}
-##
+## //
 - method:GET
 - pass:/creator/:id
 - body={}
 - res={urls:[str]}
-##
+## //
 - method:POST
 - pass:/
 - body={url:str,type:int,creator:str}
 - res={}
-## 
+## //
 - method:DELL
 - pass:/
 - body={url:str}
 - res={success:bool}
-##
+## //
 - method:GET
 - pass:/type
 - body={}
