@@ -1,36 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// バックエンドにPOSTデータを送る関数
-async function sendMessageToBackend(message, loginAddress, userId) {
-  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/send-message`;
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        login_address: loginAddress,
-        user_id: userId,
-        message: message,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'メッセージ送信に失敗しました');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('送信エラー:', error.message);
-    throw error;
-  }
-}
 
 // 会話したことがある人を取得する関数
-async function connect_people(login_address,p) 
-{
+async function connect_people(login_address,p) {
   const postdata = {
     method: 'GET',
   };
