@@ -84,6 +84,7 @@ async function getcreator(req, res){
         res.status(500).send();
     }
     else{
+        console.log(data);
         const otherUserIds = data.map(row => {
             // name が user_id_a に一致する場合は user_id_b を取得
             if (row.user_id_send === id) {

@@ -18,7 +18,7 @@ function func(){
     console.error("エラー:", error);
   });
 }
-function Login({ setCurrentPage }) 
+function Login({ setCurrentPage,set_login_address}) 
 {
   const [inputText, setInputText] = useState({ password: "", mail_address: "" });
   const [OK_or_NO_text, OK_or_NO_draw] = useState("");
@@ -69,6 +69,7 @@ function Login({ setCurrentPage })
     if (flg)
     {
       OK_or_NO_draw("");
+      set_login_address(email);
       setCurrentPage("profile"); // ログイン成功後、profileページに遷移
     } else {
       OK_or_NO_draw("パスワード、またはユーザーIDが間違っています");
