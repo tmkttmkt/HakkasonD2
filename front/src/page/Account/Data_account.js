@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from "react";
 
-function Data_account({ formData }) 
+function Data_account({ formData, decide_address,setCurrentPage}) 
 {
-  const [responseMessage, setResponseMessage] = useState('');
-  // データ送信処理
+  //ーーーーAdd_account は登録情報をデータベースに追加する関数ーーーー
+  const Add_account = (record) => 
+  {
+    // レコードデータをデータベースに追加する処理
+    console.log("レコード追加:", record);
+    setCurrentPage('profile'); // アカウント作成後にプロフィールページに遷移
+  };
+
   useEffect(() => 
   {
-    if (formData.username && formData.email && formData.password) 
+    if(formData && decide_address)
     {
-      const sendData = async () => {
-        try 
-        {
-          const response = await fetch('http://localhost:5000/create-account', 
-          {
-            method: 'POST',
-            headers: 
-            {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData), // フォームデータをJSON形式で送信
-          });
-          if (!response.ok)throw new Error('アカウント作成に失敗しました');
-          const result = await response.json(); // レスポンスをJSONとして取得
-          setResponseMessage(result.message); // 成功メッセージをセット
-        } 
-        catch (error) 
-        {
-          console.error('エラー:', error);
-          setResponseMessage('エラーが発生しました');
-        }
-      };
-      sendData();
+      Add_account(formData);
     }
-  }, [formData]); // formData が変更されるたびにバックエンドに送信
-  return (
-    <div>{responseMessage && <p>{responseMessage}</p>}</div>
-  );
+  }, [formData]);
+
+  return null; // UIを表示しない
 }
 export default Data_account;

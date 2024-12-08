@@ -1,29 +1,22 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config(); 
 const router = express.Router();
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_PASS
-const supabase = createClient(supabaseUrl, supabaseKey)
+const {supabase,generateUnusedId} =require("./supabase_wrapper.js")
 const table="login"
 
 async function postlogin(req, res){
     const { id, pass } = req.body;
     
-    const {data,error} = await supabase.from(table).select("*").eq("user_id",id);
+    const {data,error} = await supabase.from(table).select("*").eq("user_id",id).single();
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
     }
     else{
-      if(data.length>0){
+      if(data.lenght!=0){
         res.json({ success: data[0].password==pass });
       }
-      else{
-        res.json({ success: false });
-      }
+      res.json({ success: false });
     }
-           
 }
 router.post('/',postlogin);
 
@@ -49,14 +42,14 @@ async function postsignup(req, res){
       res.status(500).send();
     }
     else{
-        res.json({ success:data });
+        res.json({ success:data.lenght!=0 });
     }
 }
 router.post('/signup',postsignup);
 
 async function postloginmail(req, res){
 }
-router.post('/mail',postloginmail);
+router.post('/email',postloginmail);
 
 
 

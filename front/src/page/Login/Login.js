@@ -66,11 +66,12 @@ function Login({ setCurrentPage })
   const access = async(email, password) => {
     let flg=await getpass(email, password);
     console.log(flg)
-    if (flg) {
+    if (flg)
+    {
       OK_or_NO_draw("");
       setCurrentPage("profile"); // ログイン成功後、profileページに遷移
     } else {
-      OK_or_NO_draw("パスワード、またはメールアドレスが間違っています");
+      OK_or_NO_draw("パスワード、またはユーザーIDが間違っています");
     }
   };
 
@@ -83,13 +84,13 @@ function Login({ setCurrentPage })
   return (
     <div className="login-container">
       <h1>開発者により具体的に我々の作って欲しいホームページを届けよう</h1>
-      <h2>メールアドレスを入力してください</h2>
+      <h2>ユーザーIDを入力してください</h2>
       <input
-        type="email" // メールアドレス入力フィールド
+        type="email" // ユーザーID入力フィールド
         name="mail_address" // フィールド名を指定
         value={inputText.mail_address}
         onChange={handleInputChange}
-        placeholder="ここにメールアドレスを入力"
+        placeholder="ここにユーザーIDを入力"
       />
 
       <h2>パスワードを入力してください</h2>
@@ -109,9 +110,6 @@ function Login({ setCurrentPage })
       />
       {/* アカウント作成画面へのリンク */}
       <a href="#" onClick={handleClick}>アカウントを持っていない方はここをクリック</a>
-
-      <p>入力されたメールアドレス(テストプレイ用で表示): {inputText.mail_address}</p>
-      <p>入力されたパスワード(テストプレイ用で表示): {inputText.password}</p>
     </div>
   );
 }

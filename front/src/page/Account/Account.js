@@ -6,8 +6,7 @@ function Account({ setCurrentPage }) {
   const [errors, setErrors] = useState({ name: "", mail: "", password: "" });
 
   // 入力変更時に状態を更新する関数
-  const handleChange = (e) => 
-  {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -34,8 +33,7 @@ function Account({ setCurrentPage }) {
     }
 
     // パスワードのバリデーション
-    if (form.password.length < 6) 
-    {
+    if (form.password.length < 6) {
       newErrors.password = "パスワードは6文字以上で入力してください";
       valid = false;
     }
@@ -45,13 +43,10 @@ function Account({ setCurrentPage }) {
   };
 
   // バックエンドとの通信
-  const addpass = async () => 
-  {
-    const postdata = 
-    {
+  const addpass = async () => {
+    const postdata = {
       method: 'POST',
-      headers: 
-      {
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ user: form.name, id: form.mail, pass: form.password }),
@@ -60,20 +55,16 @@ function Account({ setCurrentPage }) {
     const url = process.env.REACT_APP_BACKEND_URL + "/account";
     console.log(url, postdata);
 
-    try 
-    {
+    try {
       const response = await fetch(url, postdata);
-      if (!response.ok) 
-      {
+      if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "アカウント作成に失敗しました");
       }
       const data = await response.json();
       console.log(data);
       return data.success;
-    } 
-    catch (error) 
-    {
+    } catch (error) {
       console.error("エラー:", error);
       alert(
         error.message.includes("NetworkError")
@@ -85,35 +76,26 @@ function Account({ setCurrentPage }) {
   };
 
   // アカウント作成処理
-  const Make_Account_end = async () => 
-  {
-    if (validateForm()) 
-    {
-      try 
-      {
-        const success = await addpass();//
-        if (success) 
-        {
+  const Make_Account_end = async () => {
+    if (validateForm()) {
+      try {
+        const success = await addpass();
+        if (success) {
           alert("アカウント作成に成功しました！");
           setForm({ name: "", mail: "", password: "" });
           setCurrentPage('profile');
-        } 
-        else 
-        {
+        } else {
           alert("アカウント作成に失敗しました");
         }
-      } 
-      catch (error) 
-      {
+      } catch (error) {
         console.error("アカウント作成中にエラー:", error);
         alert("予期しないエラーが発生しました。もう一度お試しください。");
       }
     }
-  };//ーーーーーーーーーーーーーーーーーーーーーーー
+  };
 
   // ログイン画面に戻る
-  const Return_to_login_screen = () => 
-  {
+  const Return_to_login_screen = () => {
     setCurrentPage('login');
   };
 
@@ -135,7 +117,7 @@ function Account({ setCurrentPage }) {
 
       {/* メールアドレスの入力 */}
       <div>
-        <label>メールアドレス: </label>
+        <label>ユーザーID: </label>
         <input
           type="email"
           name="mail"

@@ -21,7 +21,7 @@
 
 /* ボタンの基本スタイル */
 .side-button {
-  padding: 10px 20px;
+  padding: 5px 5px;
   background-color: #007bff;
   color: white;
   border: 2px solid #0056b3; /* 実線の枠 */
