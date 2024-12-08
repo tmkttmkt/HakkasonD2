@@ -68,9 +68,15 @@ async function delwrapper(table,item) {
     return{ data:null,error:err};
   }
 }
-async function scanwrapper(table) {
+async function scanwrapper(table,item) {
   try{
-    const paginator = paginateScan({ client: dynamodblite }, { TableName: table });
+    const parms={
+       TableName: table, 
+       FilterExpression:item.filter,
+       ExpressionAttributeValues: item.ExpressionAttributeValues,
+       ProjectionExpression:item.ExpressionAttributeValues,
+      }
+    const paginator = paginateScan({ client: dynamodblite }, parms);
     const items = [];
     for await (const page of paginator) {
       if (page.Items) {
@@ -82,7 +88,20 @@ async function scanwrapper(table) {
     return { data: null, error };
   }
 }
-
+function generateRandomKey() {
+  return crypto.randomBytes(16).toString("hex"); // 16バイトのランダムキーを生成
+}
+async function generateUnusedId(tabale) {
+  const {data,error}=scanwrapper(table);
+  if(error){
+    res.status(500).send();
+  }
+  let line=data[0];
+  while(data.incluse(line)){
+      line=generateRandomKey();
+  }
+  
+}
 module.exports={
   dynamodbclient,
   dynamodblite,
@@ -90,6 +109,7 @@ module.exports={
   putwrapper,
   delwrapper,
   scanwrapper,
+  generateUnusedId,
 }
 /*
 const testdo = async (event)=> {
