@@ -24,18 +24,29 @@ router.delete(":id",delconver)
 async function postconver(req, res){
     const body = req.body;
     const id=await generateUnusedId(table)
-    const {data,error} = await putwrapper(table,{user_id_send:body.sendId,user_id_received:body.receiveIdname,id:id,data: body.data});
+    console.lo
+    const {data,error} = await putwrapper(table,{user_id_send:body.user_id_send,user_id_received:body.user_id_received,id:id,data: body.data});
     if (error) {
       console.error('Error inserting data:', error);
-      res.status(500).send();
+      //res.status(500).send();
     }
     else{
-      res.json({id:data.lenght!=0})
+      //res.json({id:data.lenght!=0})
     }
 }
+/*
+postconver({body:{user_id_send:"tmkt",user_id_received:"maxmam",data:"それでいいの？？？"}},null)
+postconver({body:{user_id_send:"kroud",user_id_received:"maxmam",data:"そd"}},null)
+postconver({body:{user_id_send:"tmkt",user_id_received:"taketake",data:"ｔｗ"}},null)
+postconver({body:{user_id_send:"taketake",user_id_received:"maxmam",data:"テストテスト"}},null)
+postconver({body:{user_id_send:"maxmam",user_id_received:"tmkt",data:"それだにｗ"}},null)
+//*/
 router.post("/",postconver)
-
-
+async function name(params) {
+  const data=await scanwrapper(table)
+  console.log(data)
+}
+name();
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
     const {data,error}=await scanwrapper(table,{
