@@ -27,10 +27,10 @@
 - pass:/creator/:id
 - body={}
 - res={ids:[int]}
-## FormData
+##
 - method:POST
 - pass:/
-- body={file:filedata,type:int,creator:str}
+- body={url:str,type:int,creator:str}
 - res={id:str}
 ## 
 - method:DELL
@@ -91,5 +91,10 @@
 ##
 - method:GET
 - pass:/:id
-- body={user_id:text,okome:int2,role:text,exposition:text,billing:text}
+- body={}
+- res={user_id:text,okome:int2,role:text,exposition:text,billing:text}
+##
+- method:POST
+- pass:/:id
+- body={ name:str, email, bio:str}
 - res={req, res}

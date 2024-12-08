@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const getmatuokaq=require("./matuoka.js")
 const {supabase,generateUnusedId} =require("./supabase_wrapper.js")
+const {dynamodbclient,dynamodblite,getwrapper,scanwrapper,putwrapper, delwrapper }=require("./aws_wrapper.js");
 const table="conversation"
 
 
 
 async function delconver(req, res){
-    const { data, error } = await supabase.from(table).delete().eq('id', id); 
+    const { id} = req.body;
+    const { data, error } = await delwrapper(table,{id:id})
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
@@ -22,7 +24,7 @@ router.delete(":id",delconver)
 async function postconver(req, res){
     const body = req.body;
     const id=await generateUnusedId(table)
-    const {data,error} = await supabase.from(table).insert([{user_id_send:body.sendId,user_id_received:body.receiveIdname,id:id,data: body.data}]);
+    const {data,error} = await putwrapper(table,[{user_id_send:body.sendId,user_id_received:body.receiveIdname,id:id,data: body.data}]);
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
@@ -36,26 +38,36 @@ router.post("/",postconver)
 
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
-    const { data, error } = await supabase.from(table)
-    .select('*') // 必要なカラムを選択（'*' は全カラム）
-    .or(`and(user_id_send.eq.${id_a},user_id_received.eq.${id_b}),and(user_id_send.eq.${id_a},user_id_received.eq.${id_b})`);
+    const {data,error}=await scanwrapper(table,{
+      filter: `
+      (user_id_send = :id_a AND user_id_received = :id_b) 
+      OR (user_id_send = :id_b AND user_id_received = :id_a)
+      `,
+      ExpressionAttributeValues:{
+        ":id_a": id_a,
+        ":id_b": id_b,
+      },
+    });
     if (error) {
         console.error('Error inserting data:', error);
         res.status(500).send();
     }
     else{
-        res.json({sendId:data.user_id_send,receiveId:data.user_id_received,dtat:dtat.data,time:data.time});
+        res.json({datas:data});
     }
 }
 router.get("/one-on-one",gettwo)
 
 
 async function getcreator(req, res){
-    const { id } = req.params; 
-    const { data, error } = await supabase
-    .from(table)  // テーブル名を指定
-    .select('user_id_send, user_id_received') // 必要なカラムを指定
-    .or(`user_id_send.eq.${id},user_id_received.eq.${id}`); // 条件を設定
+    const { id } = req.params;   
+    const {data,error}=await scanwrapper(table,{
+      filter:"user_id_send = :id OR user_id_received = :id",
+      ExpressionAttributeValues:{
+        ":id": id,
+      },
+      ProjectionExpression: "user_id_send, user_id_received", // 必要なカラムを指定
+    });
     if (error) {
         console.error('Error inserting data:', error);
         res.status(500).send();
@@ -94,7 +106,7 @@ router.get("/matuoka/:num",getmatuoka)
 
 async function get(req, res){
     const { id } = req.params; 
-    const {data,error}=await supabase.from(table).select("*").eq("id",id).single();
+    const {data,error}=await getwrapper(table,{id:id})
     if (error) {
       console.error('Error inserting data:', error);
       res.status(500).send();
