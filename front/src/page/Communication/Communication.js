@@ -41,7 +41,31 @@ async function matuokafunc() {
     throw error;
   }
 }
+/*
+async function data_message() 
+{
+  const postdata = 
+  {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    body:{"b",}
+  };
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one`;
 
+  try {
+    const response = await fetch(url, postdata);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'データの取得に失敗しました');
+    }
+    const data = await response.json();
+    return data.quotes || [];
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
+  }
+}
+*/
 const Communication= ({login_address}) => {
   const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
@@ -52,11 +76,11 @@ const Communication= ({login_address}) => {
   const [userTalk, setUserTalk] = useState([]); // 会話したことがある人のリスト
 
   // 会話したことがある人のリストをロード
-  // 会話したことがある人のリストをロード
-  useEffect(() => {
+  useEffect(() => 
+  {
     const loadPeople = async () => {
       try {
-        const response = await connect_people("b");
+        const response = await connect_people(login_address);
         console.log('レスポンス:', response);
         
         if (!response.ids || !Array.isArray(response.ids)) {
