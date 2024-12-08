@@ -46,7 +46,7 @@ async function name(params) {
   const data=await scanwrapper(table)
   console.log(data)
 }
-name();
+//name();
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
     const {data,error}=await scanwrapper(table,{
