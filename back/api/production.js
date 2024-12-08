@@ -15,15 +15,30 @@ async function getall(req, res){
     res.status(500).send();
   }
   else{
-    res.json({ids:data.map(obj => obj.id)})
+    res.json({urls:data.map(obj => obj.id)})
   }
   
 }
 router.get('/creator/:id',getall);
 
 
+async function isused(req, res){
+  const { id } = req.body; 
+  const {data,error}=await scanwrapper(table);
+  if (error) {
+    console.error('Error inserting data:', error);
+    res.status(500).send();
+  }
+  else{
+    res.json({urls:data.map(obj => obj.id)})
+  }
+  
+}
+router.put('/creator/:id',isused);
+
+
 async function postdata(req, res){
-  const {url,type,creator} = req.data
+  const {url,type,creator} = req.body;
  
   if (!url) {
     return res.status(400).json({ error: 'No file uploaded' });
