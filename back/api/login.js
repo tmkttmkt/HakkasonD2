@@ -15,7 +15,9 @@ async function postlogin(req, res){
       if(data.lenght!=0){
         res.json({ success: data.password==pass });
       }
-      res.json({ success: false });
+      else{
+        res.json({ success: false });
+      }
     }
 }
 router.post('/',postlogin);

@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
 // ユーザーリストデータ（例）
-const users = 
-[
-  { id: 1, name: 'User1' },
-  { id: 2, name: 'User2' },
-  { id: 3, name: 'User3' },
-];
+async function connect_people()//通信繋がったことがある人を読み込むバックとの通信関数
+{
+  const postdata = 
+  {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    
+  };
+  const url = process.env.REACT_APP_BACKEND_URL + '/conversation/creator/b';
+}
+
 
 // 松岡修造の言葉を取得する関数
-async function matuokafunc() {
+async function matuokafunc() 
+{
   const postdata = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
