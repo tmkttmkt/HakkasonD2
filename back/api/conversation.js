@@ -36,7 +36,7 @@ router.post("/",postconver)
 
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
-    const { data, error } = await supabase.from(tabale)
+    const { data, error } = await supabase.from(table)
     .select('*') // 必要なカラムを選択（'*' は全カラム）
     .or(`and(user_id_send.eq.${id_a},user_id_received.eq.${id_b}),and(user_id_send.eq.${id_a},user_id_received.eq.${id_b})`);
     if (error) {
@@ -53,7 +53,7 @@ router.get("/one-on-one",gettwo)
 async function getcreator(req, res){
     const { id } = req.params; 
     const { data, error } = await supabase
-    .from(tabale)  // テーブル名を指定
+    .from(table)  // テーブル名を指定
     .select('user_id_send, user_id_received') // 必要なカラムを指定
     .or(`user_id_send.eq.${id},user_id_received.eq.${id}`); // 条件を設定
     if (error) {
@@ -64,11 +64,11 @@ async function getcreator(req, res){
         res.json({id:data.lenght!=0})
         const otherUserIds = data.map(row => {
             // name が uesr_id_a に一致する場合は uesr_id_b を取得
-            if (row.uesr_id_a === name) {
+            if (row.uesr_id_a === id) {
               return row.uesr_id_b;
             }
             // name が uesr_id_b に一致する場合は uesr_id_a を取得
-            if (row.uesr_id_b === name) {
+            if (row.uesr_id_b === id) {
               return row.uesr_id_a;
             }
             return null; // 一致しない場合は null
