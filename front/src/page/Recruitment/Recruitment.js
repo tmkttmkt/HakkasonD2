@@ -3,6 +3,7 @@ import MainContainer from '../../component/Main_container/Main_container';
 import IMAGE1 from './images/Shuzo_Matsuoka.jpg';
 import { my_Application, my_Recruitment } from './Data_Recruitment'; // 募集処理関数と応募処理関数import
 
+
 //ーーーーこれ以降下はデータベースからデータ読み込みプログラムーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 export const fetchRecruitmentData = () => //募集状況を管理するデータベースの内容をすべて取得する関数
 {
@@ -18,10 +19,10 @@ export const fetchRecruitmentData = () => //募集状況を管理するデータ
 export const Registration_Data = () => //登録情報が入ったデータベースのデータすべて取得する関数
 {
     return [
-      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "", 応募相手: "いない", 募集相手: "" ,米ポイント:0},
-      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", 応募相手: "いない", 募集相手: "",米ポイント:0},
-      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", 応募相手: "いない", 募集相手: "" ,米ポイント:0},
-      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "username123456789012345678901234567890123456789012345678901234567890@example.comaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.com", 応募相手: "いない", 募集相手: "" ,米ポイント:0}
+      { ユーザーネーム: "AA", パスワード: "", メールアドレス: "A", person_looking_for: "受託者", mail_address: "aaaaa" },
+      { ユーザーネーム: "BB", パスワード: "B", メールアドレス: "B", person_looking_for: "受託者", mail_address: "aaaaa" },
+      { ユーザーネーム: "CC", パスワード: "C", メールアドレス: "C", person_looking_for: "受託者", mail_address: "aaaaa" },
+      { ユーザーネーム: "DD", パスワード: "D", メールアドレス: "om", person_looking_for: "受託者", mail_address: "aaaaa" },
     ];
 };
 //ーーーーこれ以降上はデータベースからデータ読み込みプログラムーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -49,11 +50,11 @@ const isMatchedRecordExists2 = (myEmail,Recruitment_flag) => //募集者を投�
 
 const Recruitment = ({name,set_Recruitment_flag,Recruitment_flag,set_Apply_flag,Apply_flag}) => //nameでログイン時のアドレス取得
 {
-  const [recruitmentInput, setRecruitmentInput] = useState({
+  const [recruitmentInput, setRecruitmentInput] = useState(
+  {
     recruitment_message: '',
     Developer_or_trustee: '開発者探す',
   });
-
   const [recruitmentData, setRecruitmentData] = useState([]); // 全募集データ保持する変数作成
   const [My_data, setMyData] = useState(''); // 自分のメールアドレス取得して
   const [stop_button,set_stop_button]=useState(true);
