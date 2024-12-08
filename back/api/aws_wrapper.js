@@ -37,7 +37,8 @@ async function getwrapper(table,item) {
   const command = new GetCommand(params);
   try {
     const result=await dynamodblite.send(command);
-    return{ data:result.item,error:null};
+    console.log(result);
+    return{ data:result.Item,error:null};
   } catch (err) {
     return{ data:null,error:err};
   }
@@ -99,7 +100,7 @@ async function scanwrapper(table,item={ExpressionAttributeValues:undefined,Expre
 function generateRandomKey() {
   return crypto.randomBytes(16).toString("hex"); // 16バイトのランダムキーを生成
 }
-async function generateUnusedId(tabale) {
+async function generateUnusedId(table) {
   const {data,error}=scanwrapper(table);
   if(error){
     res.status(500).send();

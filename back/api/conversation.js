@@ -42,11 +42,11 @@ postconver({body:{user_id_send:"taketake",user_id_received:"maxmam",data:"テス
 postconver({body:{user_id_send:"maxmam",user_id_received:"tmkt",data:"それだにｗ"}},null)
 //*/
 router.post("/",postconver)
-async function name(params) {
-  const data=await scanwrapper(table)
+async function name(tabel) {
+  const data=await scanwrapper(tabel)
   console.log(data)
 }
-//name();
+name("login");
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
     const {data,error}=await scanwrapper(table,{
@@ -72,20 +72,16 @@ router.get("/one-on-one",gettwo)
 
 async function getcreator(req, res){
     const { id } = req.params;   
-    const {data,error}=await scanwrapper(table,{
-      filter:"user_id_send = :id OR user_id_received = :id",
-      ExpressionAttributeValues:{
-        ":id": id,
-      },
-      ProjectionExpression: "user_id_send, user_id_received", // 必要なカラムを指定
-    });
+    const {data,error}=await scanwrapper(table);
     if (error) {
         console.error('Error inserting data:', error);
         res.status(500).send();
     }
     else{
-        console.log(data);
-        const otherUserIds = data.map(row => {
+        const datan=data.map((item)=>{
+          return {user_id_send:item.user_id_send,user_id_received:item.user_id_received}
+        })
+        const otherUserIds = datan.map(row => {
             // name が user_id_a に一致する場合は user_id_b を取得
             if (row.user_id_send === id) {
               return row.user_id_send;
@@ -96,6 +92,7 @@ async function getcreator(req, res){
             }
             return null; // 一致しない場合は null
         }).filter(id => id !== null); // 無効なエントリを除外
+        console.log(otherUserIds)
         const uniqueOtherUserIds = [...new Set(otherUserIds)];
         res.json({ids:uniqueOtherUserIds})
     }
