@@ -1,7 +1,36 @@
 import React, { useState, useEffect } from 'react';
+// バックエンドにPOSTデータを送る関数
+async function sendMessageToBackend(message, loginAddress, userId) {
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/send-message`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        login_address: loginAddress,
+        user_id: userId,
+        message: message,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'メッセージ送信に失敗しました');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('送信エラー:', error.message);
+    throw error;
+  }
+}
 
 // 会話したことがある人を取得する関数
-async function connect_people(login_address,p) {
+async function connect_people(login_address,p) 
+{
   const postdata = {
     method: 'GET',
   };
@@ -42,17 +71,15 @@ async function matuokafunc() {
   }
 }
 
-async function data_message(login) 
-{
-  const postdata = 
-  {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    body:{login,}
-  };
-  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one`;
+async function data_message(login, user) {
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one?login=${encodeURIComponent(login)}&user=${encodeURIComponent(user)}`;
+
   try {
-    const response = await fetch(url, postdata);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'ユーザーリストの取得に失敗しました');
@@ -63,7 +90,6 @@ async function data_message(login)
     throw error;
   }
 }
-
 const Communication= ({login_address}) => {
   const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
@@ -103,16 +129,16 @@ const Communication= ({login_address}) => {
   
   useEffect(() => {
     const load_message = async () => {
+      if (!selectedUser) return; // ユーザーが選択されていない場合処理を中断
       try {
-        const message_take = await data_message(login_address,selectedUser); // 選択肢の言葉を取得
+        const message_take = await data_message(login_address, selectedUser);
         set_message(message_take);
-      } catch (err) 
-      {
+      } catch (err) {
         setError(err.message);
       }
     };
     load_message ();
-  }, []);
+  }, [selectedUser]);
 
   // 松岡修造の言葉をロード
   useEffect(() => {
@@ -128,9 +154,12 @@ const Communication= ({login_address}) => {
   }, [messages]);
 
   // ユーザー選択時の処理
-  const handleUserClick = (userTalk) => {
-    setSelectedUser(userTalk);
+  const handleUserClick = (user) => {
+    if (user?.id) { // 安全な選択を保証
+      setSelectedUser(user);
+    }
   };
+  
 
   // 選択肢クリック時の処理
   const handleOptionClick = (optionText) => {
