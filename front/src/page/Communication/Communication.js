@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 
-// ユーザーリストデータ（例）
-async function connect_people()//通信繋がったことがある人を読み込むバックとの通信関数
-{
-  const postdata = 
-  {
+// 会話したことがある人を取得する関数
+async function connect_people(login_address) {
+  const postdata = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    
   };
-  const url = process.env.REACT_APP_BACKEND_URL + '/conversation/creator/b';
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/creator/${login_address}`;
+
+  try {
+    const response = await fetch(url, postdata);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'ユーザーリストの取得に失敗しました');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
+  }
 }
 
-
 // 松岡修造の言葉を取得する関数
-async function matuokafunc() 
-{
+async function matuokafunc() {
   const postdata = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   };
-  const url = process.env.REACT_APP_BACKEND_URL + '/conversation/matuoka/5';
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/matuoka/5`;
 
   try {
     const response = await fetch(url, postdata);
@@ -36,55 +42,60 @@ async function matuokafunc()
   }
 }
 
-const ChatProgram = () => {
-  const [selectedUser, setSelectedUser] = useState(users[0]); // 選択中のユーザー
+const Communication= ({login_address}) => {
+  const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
   const [messages, setMessages] = useState({}); // ユーザーごとのメッセージ履歴を管理
   const [selectedOption, setSelectedOption] = useState(''); // 選択肢データ
   const [words, setWords] = useState([]); // 松岡修造の言葉
   const [error, setError] = useState(null); // エラーメッセージ
-  
-  //最初に会話履歴をロード
-  useEffect(() => 
-    {
-      const loadWords = async () => 
-      {
-        try 
-        {
-          const quotes = await matuokafunc();//バックから選択肢の言葉をとってくる。
-          setWords(quotes);
-        } 
-        catch (err) 
-        {
-          setError(err.message);
+  const [userTalk, setUserTalk] = useState([]); // 会話したことがある人のリスト
+
+  // 会話したことがある人のリストをロード
+  // 会話したことがある人のリストをロード
+  useEffect(() => {
+    const loadPeople = async () => {
+      try {
+        const response = await connect_people("b");
+        console.log('レスポンス:', response);
+        
+        if (!response.ids || !Array.isArray(response.ids)) {
+          throw new Error('レスポンスフォーマットが不正です');
         }
-      };
-      loadWords();
-    }, []);
+   
+        const uniqueUsers = response.ids.map((id) => ({
+          id: id,
+          name: `User: ${id}`,
+        }));
+   
+        setUserTalk(uniqueUsers);
+      } catch (err) {
+        console.error('ユーザーリスト取得エラー:', err);
+        setError(err.message);
+      }
+   };
+  
+    loadPeople();
+  }, [login_address]);
+  
   
 
   // 松岡修造の言葉をロード
   useEffect(() => {
-    const loadWords = async () => 
-    {
-      try 
-      {
-        const quotes = await matuokafunc();//バックから選択肢の言葉をとってくる。
+    const loadWords = async () => {
+      try {
+        const quotes = await matuokafunc(); // 選択肢の言葉を取得
         setWords(quotes);
-      } 
-      catch (err) 
-      {
+      } catch (err) {
         setError(err.message);
       }
     };
     loadWords();
   }, [messages]);
 
-
-
   // ユーザー選択時の処理
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
+  const handleUserClick = (userTalk) => {
+    setSelectedUser(userTalk);
   };
 
   // 選択肢クリック時の処理
@@ -125,22 +136,26 @@ const ChatProgram = () => {
         }}
       >
         <h3 style={{ textAlign: 'center' }}>ユーザーリスト</h3>
-        {users.map((user) => (
-          <div
-            key={user.id}
-            onClick={() => handleUserClick(user)}
-            style={{
-              padding: '10px',
-              margin: '5px 0',
-              cursor: 'pointer',
-              backgroundColor: selectedUser.id === user.id ? '#d1c4e9' : '#fff',
-              borderRadius: '4px',
-              transition: 'background 0.3s',
-            }}
-          >
-            {user.name}
-          </div>
-        ))}
+        {userTalk.length > 0 ? (
+          userTalk.map((user) => (
+            <div
+              key={user.id}
+              onClick={() => handleUserClick(user)}
+              style={{
+                padding: '10px',
+                margin: '5px 0',
+                cursor: 'pointer',
+                backgroundColor: selectedUser?.id === user.id ? '#d1c4e9' : '#fff',
+                borderRadius: '4px',
+                transition: 'background 0.3s',
+              }}
+            >
+              {user.name}
+            </div>
+          ))
+        ) : (
+          <div style={{ textAlign: 'center', color: '#888' }}>ユーザーがいません</div>
+        )}
       </div>
 
       {/* 右側のチャットエリア */}
@@ -152,36 +167,37 @@ const ChatProgram = () => {
           </div>
         )}
 
-        {/* チャット表示領域 */}
-        <div
-          style={{
-            flex: 1,
-            margin: '10px',
-            padding: '10px',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            overflowY: 'auto',
-            background: '#f9f9f9',
-          }}
-        >
-          {messages[selectedUser.id] ? (
-            messages[selectedUser.id].map((msg, index) => (
-              <div
-                key={index}
-                style={{
-                  padding: '8px',
-                  margin: '5px 0',
-                  borderRadius: '5px',
-                  background: msg.color === 'blue' ? '#e0f7fa' : '#fff3e0',
-                }}
-              >
-                {msg.text}
-              </div>
-            ))
-          ) : (
-            <div style={{ color: '#888' }}>メッセージがありません。</div>
-          )}
-        </div>
+       {/* チャット表示領域 */}
+<div
+  style={{
+    flex: 1,
+    margin: '10px',
+    padding: '10px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    overflowY: 'auto',
+    background: '#f9f9f9',
+  }}
+>
+  {selectedUser && messages[selectedUser.id] ? (
+    messages[selectedUser.id].map((msg, index) => (
+      <div
+        key={index}
+        style={{
+          padding: '8px',
+          margin: '5px 0',
+          borderRadius: '5px',
+          background: msg.color === 'blue' ? '#e0f7fa' : '#fff3e0',
+        }}
+      >
+        {msg.text}
+      </div>
+    ))
+  ) : (
+    <div style={{ color: '#888' }}>メッセージがありません。</div>
+  )}
+</div>
+
 
         {/* 選択肢エリア */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
@@ -242,5 +258,4 @@ const ChatProgram = () => {
     </div>
   );
 };
-
-export default ChatProgram;
+export default Communication;
