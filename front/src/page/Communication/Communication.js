@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // 会話したことがある人を取得する関数
-async function connect_people(login_address) {
+async function connect_people(login_address,p) {
   const postdata = {
     method: 'GET',
   };
@@ -41,31 +41,29 @@ async function matuokafunc() {
     throw error;
   }
 }
-/*
-async function data_message() 
+
+async function data_message(login) 
 {
   const postdata = 
   {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
-    body:{"b",}
+    body:{login,}
   };
   const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one`;
-
   try {
     const response = await fetch(url, postdata);
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'データの取得に失敗しました');
+      throw new Error(errorData.message || 'ユーザーリストの取得に失敗しました');
     }
-    const data = await response.json();
-    return data.quotes || [];
+    return await response.json();
   } catch (error) {
     console.error('APIエラー:', error.message);
     throw error;
   }
 }
-*/
+
 const Communication= ({login_address}) => {
   const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
@@ -74,6 +72,7 @@ const Communication= ({login_address}) => {
   const [words, setWords] = useState([]); // 松岡修造の言葉
   const [error, setError] = useState(null); // エラーメッセージ
   const [userTalk, setUserTalk] = useState([]); // 会話したことがある人のリスト
+  const [message,set_message]=useState([]);
 
   // 会話したことがある人のリストをロード
   useEffect(() => 
@@ -102,7 +101,18 @@ const Communication= ({login_address}) => {
     loadPeople();
   }, [login_address]);
   
-  
+  useEffect(() => {
+    const load_message = async () => {
+      try {
+        const message_take = await data_message(login_address,selectedUser); // 選択肢の言葉を取得
+        set_message(message_take);
+      } catch (err) 
+      {
+        setError(err.message);
+      }
+    };
+    load_message ();
+  }, []);
 
   // 松岡修造の言葉をロード
   useEffect(() => {
