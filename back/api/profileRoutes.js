@@ -5,7 +5,8 @@ const {supabase,generateUnusedId}=require("./supabase_wrapper.js")
 const router = express.Router();
 
 // プロフィール取得
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => 
+{
   const { id } = req.params;
   try {
     const { data, error } = await supabase

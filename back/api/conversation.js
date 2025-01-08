@@ -36,7 +36,7 @@ router.post("/",postconver)
 
 async function gettwo(req, res){
     const { id_a,id_b} = req.body;
-    const { data, error } = await supabase.from(tabale)
+    const { data, error } = await supabase.from(table)
     .select('*') // 必要なカラムを選択（'*' は全カラム）
     .or(`and(user_id_send.eq.${id_a},user_id_received.eq.${id_b}),and(user_id_send.eq.${id_a},user_id_received.eq.${id_b})`);
     if (error) {
@@ -44,7 +44,7 @@ async function gettwo(req, res){
         res.status(500).send();
     }
     else{
-        res.json({sendId:data.user_id_send,receiveId:data.user_id_received,dtat:dtat.data,time:data.time});
+        res.json({sendId:data.user_id_send,receiveId:data.user_id_received,dtat:data.data,time:data.time});
     }
 }
 router.get("/one-on-one",gettwo)
@@ -53,7 +53,7 @@ router.get("/one-on-one",gettwo)
 async function getcreator(req, res){
     const { id } = req.params; 
     const { data, error } = await supabase
-    .from(tabale)  // テーブル名を指定
+    .from(table)  // テーブル名を指定
     .select('user_id_send, user_id_received') // 必要なカラムを指定
     .or(`user_id_send.eq.${id},user_id_received.eq.${id}`); // 条件を設定
     if (error) {
@@ -61,15 +61,15 @@ async function getcreator(req, res){
         res.status(500).send();
     }
     else{
-        res.json({id:data.lenght!=0})
+        console.log(data);
         const otherUserIds = data.map(row => {
-            // name が uesr_id_a に一致する場合は uesr_id_b を取得
-            if (row.uesr_id_a === name) {
-              return row.uesr_id_b;
+            // name が user_id_a に一致する場合は user_id_b を取得
+            if (row.user_id_send === id) {
+              return row.user_id_send;
             }
-            // name が uesr_id_b に一致する場合は uesr_id_a を取得
-            if (row.uesr_id_b === name) {
-              return row.uesr_id_a;
+            // name が user_id_b に一致する場合は user_id_a を取得
+            if (row.user_id_received === id) {
+              return row.user_id_send;
             }
             return null; // 一致しない場合は null
         }).filter(id => id !== null); // 無効なエントリを除外

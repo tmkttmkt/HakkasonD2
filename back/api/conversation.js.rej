@@ -1,0 +1,17 @@
+diff a/back/api/conversation.js b/back/api/conversation.js	(rejected hunks)
+@@ -82,14 +82,7 @@
+ async function getmatuoka(req, res){
+     const { num } = req.params; 
+     const strings=getmatuokaq(num);
+-    if(strings.length!=0){
+-      res.json({quotes:strings});
+-    }
+-    else{
+-      console.error('多分数のオーバー', error);
+-      res.status(500).send();
+-
+-    }
++    res.json({quotes:strings});
+ }
+ router.get("/matuoka/:num",getmatuoka)
+ 
