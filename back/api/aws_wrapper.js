@@ -89,5 +89,4 @@ const testdel = async (event)=> {
     console.error("Error deleting item:", err);
   }
 }
-testdel();//*/
 module.exports=dynamodbClient
