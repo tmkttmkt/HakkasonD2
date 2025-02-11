@@ -1,4 +1,24 @@
 import React, { useState, useEffect } from 'react';
+
+const getConversationHistory = async (userId, loginAddress) => {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id_a: loginAddress,
+      id_b: userId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch conversation history');
+  }
+  const data = await response.json();
+  return data;
+};
+
 // バックエンドにPOSTデータを送る関数
 async function sendMessageToBackend(message, loginAddress, userId) {
   const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/send-message`;
@@ -29,8 +49,7 @@ async function sendMessageToBackend(message, loginAddress, userId) {
 }
 
 // 会話したことがある人を取得する関数
-async function connect_people(login_address,p) 
-{
+async function connect_people(login_address) {
   const postdata = {
     method: 'GET',
   };
@@ -90,54 +109,52 @@ async function data_message(login, user) {
     throw error;
   }
 }
-const Communication= ({login_address}) => {
+
+const Communication = ({ login_address }) => {
   const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
   const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
-  const [messages, setMessages] = useState({}); // ユーザーごとのメッセージ履歴を管理
+  const [messages, setMessages] = useState([]); // メッセージ履歴を管理
   const [selectedOption, setSelectedOption] = useState(''); // 選択肢データ
   const [words, setWords] = useState([]); // 松岡修造の言葉
   const [error, setError] = useState(null); // エラーメッセージ
   const [userTalk, setUserTalk] = useState([]); // 会話したことがある人のリスト
-  const [message,set_message]=useState([]);
 
   // 会話したことがある人のリストをロード
   useEffect(() => 
-  {
+{
     const loadPeople = async () => {
       try {
         const response = await connect_people(login_address);
-        console.log('レスポンス:', response);
-        
+
         if (!response.ids || !Array.isArray(response.ids)) {
           throw new Error('レスポンスフォーマットが不正です');
         }
-   
+
         const uniqueUsers = response.ids.map((id) => ({
           id: id,
           name: `User: ${id}`,
         }));
-   
         setUserTalk(uniqueUsers);
       } catch (err) {
         console.error('ユーザーリスト取得エラー:', err);
         setError(err.message);
       }
-   };
-  
+    };
+
     loadPeople();
   }, [login_address]);
-  
+
   useEffect(() => {
     const load_message = async () => {
       if (!selectedUser) return; // ユーザーが選択されていない場合処理を中断
       try {
-        const message_take = await data_message(login_address, selectedUser);
-        set_message(message_take);
+        const message_take = await getConversationHistory(selectedUser.id, login_address);
+        setMessages(message_take);
       } catch (err) {
         setError(err.message);
       }
     };
-    load_message ();
+    load_message();
   }, [selectedUser]);
 
   // 松岡修造の言葉をロード
@@ -154,12 +171,18 @@ const Communication= ({login_address}) => {
   }, [messages]);
 
   // ユーザー選択時の処理
-  const handleUserClick = (user) => {
+  const handleUserClick = async (user) => {
     if (user?.id) { // 安全な選択を保証
       setSelectedUser(user);
+
+      try {
+        const history = await getConversationHistory(user.id, login_address);
+        setMessages(history);
+      } catch (err) {
+        setError(err.message);
+      }
     }
   };
-  
 
   // 選択肢クリック時の処理
   const handleOptionClick = (optionText) => {
@@ -174,14 +197,12 @@ const Communication= ({login_address}) => {
     }
 
     const newMessage = {
-      color: selectedColor,
-      text: selectedOption,
+      time: new Date().toLocaleString(),
+      user_id_send: login_address,
+      data: selectedOption,
     };
 
-    setMessages((prevMessages) => ({
-      ...prevMessages,
-      [selectedUser.id]: [...(prevMessages[selectedUser.id] || []), newMessage],
-    }));
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
 
     setSelectedOption(''); // 選択肢をリセット
   };
@@ -230,37 +251,37 @@ const Communication= ({login_address}) => {
           </div>
         )}
 
-       {/* チャット表示領域 */}
-<div
-  style={{
-    flex: 1,
-    margin: '10px',
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    overflowY: 'auto',
-    background: '#f9f9f9',
-  }}
->
-  {selectedUser && messages[selectedUser.id] ? (
-    messages[selectedUser.id].map((msg, index) => (
-      <div
-        key={index}
-        style={{
-          padding: '8px',
-          margin: '5px 0',
-          borderRadius: '5px',
-          background: msg.color === 'blue' ? '#e0f7fa' : '#fff3e0',
-        }}
-      >
-        {msg.text}
-      </div>
-    ))
-  ) : (
-    <div style={{ color: '#888' }}>メッセージがありません。</div>
-  )}
-</div>
-
+        {/* チャット表示領域 */}
+        <div
+          style={{
+            flex: 1,
+            margin: '10px',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            overflowY: 'auto',
+            background: '#f9f9f9',
+          }}
+        >
+          {messages.length > 0 ? (
+            messages.map((msg, index) => (
+              <div
+                key={index}
+                style={{
+                  padding: '8px',
+                  margin: '5px 0',
+                  borderRadius: '5px',
+                  background: msg.user_id_send === login_address ? '#ffe0b2' : '#ebe0ff',
+                }}
+              >
+                <div>{msg.data}</div>
+                <div style={{ fontSize: '0.8em', color: '#888' }}>{msg.time}</div>
+              </div>
+            ))
+          ) : (
+            <div style={{ color: '#888' }}>メッセージがありません。</div>
+          )}
+        </div>
 
         {/* 選択肢エリア */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
@@ -281,32 +302,12 @@ const Communication= ({login_address}) => {
           ))}
         </div>
 
-        {/* 吹き出し色選択と送信ボタン */}
+        {/* 送信ボタン */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="radio"
-              name="color"
-              value="blue"
-              checked={selectedColor === 'blue'}
-              onChange={(e) => setSelectedColor(e.target.value)}
-            />
-            青色
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="radio"
-              name="color"
-              value="yellow"
-              checked={selectedColor === 'yellow'}
-              onChange={(e) => setSelectedColor(e.target.value)}
-            />
-            黄色
-          </label>
           <button
             onClick={handleSendMessage}
             style={{
-              padding: '10px 20px',
+              padding: '10px 40px',
               cursor: 'pointer',
               border: '1px solid #ccc',
               borderRadius: '5px',
@@ -321,4 +322,5 @@ const Communication= ({login_address}) => {
     </div>
   );
 };
+
 export default Communication;
