@@ -23,18 +23,23 @@
 - body={}
 - res={url:str,creator:str,type:int}
 ##
+- method:PUT
+- pass:/
+- body={}
+- res={success:bool}
+##
 - method:GET
 - pass:/creator/:id
 - body={}
-- res={ids:[int]}
-## FormData
+- res={urls:[int]}
+##
 - method:POST
 - pass:/
-- body={file:filedata,type:int,creator:str}
-- res={id:str}
+- body={type:int,creator:str}
+- res={}
 ## 
 - method:DELL
-- pass:/:id
+- pass:/id:str
 - body={}
 - res={success:bool}
 ##
@@ -67,7 +72,7 @@
 - body={sendId:str,receiveId:str,data:str}
 - res={id:str}
 ## 
-- method:GET
+- method:POST
 - pass:/one-on-one
 - body={id_a:str,id_b:str}
 - res={datas:[{sendId:str,receiveId:str,data:str,time:time}]}
@@ -93,3 +98,4 @@
 - pass:/:id
 - body={user_id:text,okome:int2,role:text,exposition:text,billing:text}
 - res={req, res}
+

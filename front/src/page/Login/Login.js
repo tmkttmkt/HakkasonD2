@@ -18,7 +18,7 @@ function func(){
     console.error("エラー:", error);
   });
 }
-function Login({ setCurrentPage }) 
+function Login({ setCurrentPage,set_login_address}) 
 {
   const [inputText, setInputText] = useState({ password: "", mail_address: "" });
   const [OK_or_NO_text, OK_or_NO_draw] = useState("");
@@ -31,40 +31,48 @@ function Login({ setCurrentPage })
       [name]: value // 対応するプロパティを更新
     }));
   };
-  async function getpass(mail, password){
+  async function getpass(mail, password)
+  {
+    //ーーーーURLのデーターーー
     let ret=false;
-    let postdata={
-      method: 'POST', // リクエストの種類を指定
-      headers: {
+    let postdata=
+    {
+      method: 'POST', // リクエストの種類を指定()
+      headers:
+      {
         'Content-Type': 'application/json' // データ形式を指定
       },
-      body: JSON.stringify({id:mail,pass:password}) // 送信するデータをJSON文字列に変換
-    }
-    let url=process.env.REACT_APP_BACKEND_URL+"/login";
+      // body:の所では、データーべ―スにデータ送信しようとしているデータをデータベースに送信が可能なJSON文字列という形式に変更している。
+      body: JSON.stringify({id:mail,pass:password})// 送信するデータをJSON文字列に変換
+    }//postdataでHTTPリクエストを送るためのデータを管理している。
+    let url=process.env.REACT_APP_BACKEND_URL+"/login";//
     console.log(url,postdata);
-    await fetch(url,postdata)
-    .then((response) => 
+    //ーーーーーーーーーーーーー
+    await fetch(url,postdata)//データベース送信、ボール投げる
+    .then((response) => //ボールcatch時に起動　fetchの返り値が入る(response)
     {
       if (!response.ok) {throw new Error("データ取得に失敗しました");}
-      return response.json();
+      return response.json();//
     })
-    .then((data) => 
+    .then((data) => //response.json();の関数起動時の返り値が(data)に入る
     {
       console.log(data)
       ret=data.success
     })
-    .catch((error) => {console.error("エラー:", error);})
+    .catch((error) => {console.error("エラー:", error);})//エラー対処処理
     return ret
   }
   // ログイン認証処理
   const access = async(email, password) => {
     let flg=await getpass(email, password);
     console.log(flg)
-    if (flg) {
+    if (flg)
+    {
       OK_or_NO_draw("");
+      set_login_address(email);
       setCurrentPage("profile"); // ログイン成功後、profileページに遷移
     } else {
-      OK_or_NO_draw("パスワード、またはメールアドレスが間違っています");
+      OK_or_NO_draw("パスワード、またはユーザーIDが間違っています");
     }
   };
 
@@ -77,13 +85,13 @@ function Login({ setCurrentPage })
   return (
     <div className="login-container">
       <h1>開発者により具体的に我々の作って欲しいホームページを届けよう</h1>
-      <h2>メールアドレスを入力してください</h2>
+      <h2>ユーザーIDを入力してください</h2>
       <input
-        type="email" // メールアドレス入力フィールド
+        type="email" // ユーザーID入力フィールド
         name="mail_address" // フィールド名を指定
         value={inputText.mail_address}
         onChange={handleInputChange}
-        placeholder="ここにメールアドレスを入力"
+        placeholder="ここにユーザーIDを入力"
       />
 
       <h2>パスワードを入力してください</h2>
@@ -103,9 +111,6 @@ function Login({ setCurrentPage })
       />
       {/* アカウント作成画面へのリンク */}
       <a href="#" onClick={handleClick}>アカウントを持っていない方はここをクリック</a>
-
-      <p>入力されたメールアドレス(テストプレイ用で表示): {inputText.mail_address}</p>
-      <p>入力されたパスワード(テストプレイ用で表示): {inputText.password}</p>
     </div>
   );
 }

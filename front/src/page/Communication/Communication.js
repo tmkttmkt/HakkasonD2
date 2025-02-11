@@ -1,69 +1,324 @@
-import React, { useState } from 'react';
-import MainContainer from '../../component/Main_container/Main_container'; // MainContainerをインポート
-import IMAGE1 from './images/仮画像1.png'// 画像のパス
-const Communication = ({setCurrentPage}) => 
+import React, { useState, useEffect } from 'react';
+
+const getConversationHistory = async (userId, loginAddress) => {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id_a: loginAddress,
+      id_b: userId,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch conversation history');
+  }
+  const data = await response.json();
+  return data;
+};
+
+// バックエンドにPOSTデータを送る関数
+async function sendMessageToBackend(message, loginAddress, userId) {
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/send-message`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        login_address: loginAddress,
+        user_id: userId,
+        message: message,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'メッセージ送信に失敗しました');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('送信エラー:', error.message);
+    throw error;
+  }
+}
+
+// 会話したことがある人を取得する関数
+async function connect_people(login_address) {
+  const postdata = {
+    method: 'GET',
+  };
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/creator/${login_address}`;
+
+  try {
+    const response = await fetch(url, postdata);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'ユーザーリストの取得に失敗しました');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
+  }
+}
+
+// 松岡修造の言葉を取得する関数
+async function matuokafunc() {
+  const postdata = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  };
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/matuoka/5`;
+
+  try {
+    const response = await fetch(url, postdata);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'データの取得に失敗しました');
+    }
+    const data = await response.json();
+    return data.quotes || [];
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
+  }
+}
+
+async function data_message(login, user) {
+  const url = `${process.env.REACT_APP_BACKEND_URL}/conversation/one-on-one?login=${encodeURIComponent(login)}&user=${encodeURIComponent(user)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'ユーザーリストの取得に失敗しました');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('APIエラー:', error.message);
+    throw error;
+  }
+}
+
+const Communication = ({ login_address }) => {
+  const [selectedUser, setSelectedUser] = useState(null); // 選択中のユーザー
+  const [selectedColor, setSelectedColor] = useState('blue'); // 吹き出しの色
+  const [messages, setMessages] = useState([]); // メッセージ履歴を管理
+  const [selectedOption, setSelectedOption] = useState(''); // 選択肢データ
+  const [words, setWords] = useState([]); // 松岡修造の言葉
+  const [error, setError] = useState(null); // エラーメッセージ
+  const [userTalk, setUserTalk] = useState([]); // 会話したことがある人のリスト
+
+  // 会話したことがある人のリストをロード
+  useEffect(() => 
 {
-  const page_A = () => 
-  {
-    setCurrentPage("chat");
+    const loadPeople = async () => {
+      try {
+        const response = await connect_people(login_address);
+
+        if (!response.ids || !Array.isArray(response.ids)) {
+          throw new Error('レスポンスフォーマットが不正です');
+        }
+
+        const uniqueUsers = response.ids.map((id) => ({
+          id: id,
+          name: `User: ${id}`,
+        }));
+        setUserTalk(uniqueUsers);
+      } catch (err) {
+        console.error('ユーザーリスト取得エラー:', err);
+        setError(err.message);
+      }
+    };
+
+    loadPeople();
+  }, [login_address]);
+
+  useEffect(() => {
+    const load_message = async () => {
+      if (!selectedUser) return; // ユーザーが選択されていない場合処理を中断
+      try {
+        const message_take = await getConversationHistory(selectedUser.id, login_address);
+        setMessages(message_take);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    load_message();
+  }, [selectedUser]);
+
+  // 松岡修造の言葉をロード
+  useEffect(() => {
+    const loadWords = async () => {
+      try {
+        const quotes = await matuokafunc(); // 選択肢の言葉を取得
+        setWords(quotes);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    loadWords();
+  }, [messages]);
+
+  // ユーザー選択時の処理
+  const handleUserClick = async (user) => {
+    if (user?.id) { // 安全な選択を保証
+      setSelectedUser(user);
+
+      try {
+        const history = await getConversationHistory(user.id, login_address);
+        setMessages(history);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
   };
 
-  const page_B = () => 
-  {
-    console.log('ページBがクリックされました');
+  // 選択肢クリック時の処理
+  const handleOptionClick = (optionText) => {
+    setSelectedOption(optionText);
   };
 
-  const page_C = () => 
-  {
-    console.log('ページCがクリックされました');
+  // メッセージ送信処理
+  const handleSendMessage = () => {
+    if (!selectedOption) {
+      alert('メッセージを選択してください');
+      return;
+    }
+
+    const newMessage = {
+      time: new Date().toLocaleString(),
+      user_id_send: login_address,
+      data: selectedOption,
+    };
+
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    setSelectedOption(''); // 選択肢をリセット
   };
 
-  const page_D = () => 
-  {
-
-  };
-
-  // メインコンテナに渡すデータを定義
-  const layoutData = [
-    {
-      sideButtonPosition: 'left',
-      buttonText: 'コミュニケーション画面ボタン1',
-      onClick: page_A,
-      text: 'コミュニケーション画面に表示させたい文1',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'left',
-      buttonText: 'コミュニケーション画面ボタン2',
-      onClick: page_B,
-      text: 'コミュニケーション画面に表示させたい文2',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'right',
-      buttonText: 'コミュニケーション画面ボタン3',
-      onClick: page_C,
-      text: 'コミュニケーション画面に表示させたい文3',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-    {
-      sideButtonPosition: 'center',
-      buttonText: 'コミュニケーション画面ボタン4',
-      onClick: page_D,
-      text: 'コミュニケーション画面に表示させたい文4',
-      textSize: 20,
-      imageSrc: IMAGE1
-    },
-  ];
   return (
-    <div>
-      <h1>コミュニケーション画面です(仮配置)</h1>
-      
-      {/* MainContainerコンポーネントを使って、layoutDataを渡す */}
-      <MainContainer layoutData={layoutData} />
+    <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
+      {/* 左側ユーザーリスト */}
+      <div
+        style={{
+          width: '250px',
+          borderRight: '1px solid #ccc',
+          padding: '10px',
+          overflowY: 'auto',
+          background: '#f4f4f4',
+        }}
+      >
+        <h3 style={{ textAlign: 'center' }}>ユーザーリスト</h3>
+        {userTalk.length > 0 ? (
+          userTalk.map((user) => (
+            <div
+              key={user.id}
+              onClick={() => handleUserClick(user)}
+              style={{
+                padding: '10px',
+                margin: '5px 0',
+                cursor: 'pointer',
+                backgroundColor: selectedUser?.id === user.id ? '#d1c4e9' : '#fff',
+                borderRadius: '4px',
+                transition: 'background 0.3s',
+              }}
+            >
+              {user.name}
+            </div>
+          ))
+        ) : (
+          <div style={{ textAlign: 'center', color: '#888' }}>ユーザーがいません</div>
+        )}
+      </div>
+
+      {/* 右側のチャットエリア */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* エラー表示 */}
+        {error && (
+          <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>
+            {error}
+          </div>
+        )}
+
+        {/* チャット表示領域 */}
+        <div
+          style={{
+            flex: 1,
+            margin: '10px',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            overflowY: 'auto',
+            background: '#f9f9f9',
+          }}
+        >
+          {messages.length > 0 ? (
+            messages.map((msg, index) => (
+              <div
+                key={index}
+                style={{
+                  padding: '8px',
+                  margin: '5px 0',
+                  borderRadius: '5px',
+                  background: msg.user_id_send === login_address ? '#ffe0b2' : '#ebe0ff',
+                }}
+              >
+                <div>{msg.data}</div>
+                <div style={{ fontSize: '0.8em', color: '#888' }}>{msg.time}</div>
+              </div>
+            ))
+          ) : (
+            <div style={{ color: '#888' }}>メッセージがありません。</div>
+          )}
+        </div>
+
+        {/* 選択肢エリア */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          {words.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleOptionClick(option)}
+              style={{
+                padding: '8px',
+                cursor: 'pointer',
+                background: selectedOption === option ? '#d1c4e9' : '#f9f9f9',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+
+        {/* 送信ボタン */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+          <button
+            onClick={handleSendMessage}
+            style={{
+              padding: '10px 40px',
+              cursor: 'pointer',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              background: '#4caf50',
+              color: 'white',
+            }}
+          >
+            送信
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

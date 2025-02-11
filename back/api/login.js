@@ -8,10 +8,16 @@ async function postlogin(req, res) {
     
     const { data, error } = await supabase.from(table).select("*").eq("user_id", id).single();
     if (error) {
-        console.error('Error fetching data:', error);
-        res.status(500).send();
-    } else {
-        res.json({ success: data[0]?.password === pass });
+      console.error('Error inserting data:', error);
+      res.status(500).send();
+    }
+    else{
+      if(data.lenght!=0){
+        res.json({ success: data.password==pass });
+      }
+      else{
+        res.json({ success: false });
+      }
     }
 }
 router.post('/', postlogin);
