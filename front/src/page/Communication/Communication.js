@@ -30,9 +30,9 @@ async function sendMessageToBackend(message, loginAddress, userId) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        login_address: loginAddress,
-        user_id: userId,
-        message: message,
+        sendId: loginAddress,
+        receiveIdname: userId,
+        data: message,
       }),
     });
 
@@ -201,7 +201,7 @@ const Communication = ({ login_address }) => {
       user_id_send: login_address,
       data: selectedOption,
     };
-
+    sendMessageToBackend(selectedOption, login_address, selectedUser.id);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
 
     setSelectedOption(''); // 選択肢をリセット

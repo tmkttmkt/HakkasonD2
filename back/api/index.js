@@ -7,7 +7,7 @@ app.use(express.json());  // JSON形式のリクエストボディを解析
 app.use(express.urlencoded({ extended: true }));  // URLエンコードされたデータの解析
 app.use(cors());
 
-const port = 5000;
+const port = 5004;
 
 app.use("/login",require('./login.js'));
 app.use("/ranking",require('./ranking.js'));

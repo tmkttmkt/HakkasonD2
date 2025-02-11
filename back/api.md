@@ -68,7 +68,7 @@
 - res={success:bool}
 ## 
 - method:POST
-- pass:/
+- pass:/send-message
 - body={sendId:str,receiveId:str,data:str}
 - res={id:str}
 ## 
